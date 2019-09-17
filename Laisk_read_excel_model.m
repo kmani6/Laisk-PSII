@@ -1,7 +1,7 @@
 function [species,S,rate_inds] = Laisk_read_excel_model(analysis_name)
 
 species = {};
-
+%github
 file = [analysis_name,'/LaiskReactions.xls']; 
 [~,reactions,~] = xlsread(file);
 
