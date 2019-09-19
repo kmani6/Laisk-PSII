@@ -147,12 +147,48 @@ end
  
 [kconst] = LaiskKconstants(analysis_name);
  
-Sol = ode23t(@(t,y) LaiskPS2ODES(t,y,kconst,rate_inds,S),linspace(tstart,tend,1e3),yinitial);
+Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
+%Sol.x(1) = Sol.x(2)/100;
 dydt = [];
 for i = 1:length(Sol.x)
-    dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),kconst,rate_inds,S);
+    dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
+    r(:,i) = LaiskRates(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
 end
-  
+
+
+
+
+
+
+ figure('Name','Y-Vals')
+ species_in_graph = {'YoPrArBoo','YoPrAoBoo','YrPrAo'};
+ idcs = [];
+ 
+ for i = 1:length(species_in_graph)
+     idcs(i) = find(strcmp(species,species_in_graph{i}));  
+ end
+ 
+ plot(Sol.x,Sol.y(idcs,:))
+ legend(species_in_graph);
+
+ figure('Name','Rates')
+ YrPrAoBooidc = find(strcmp(species,'YrPrAoBoo'));
+ indcs_of_reactions = find(S(YrPrAoBooidc,:)); 
+ 
+ plot(Sol.x,r(indcs_of_reactions,:))
+ Reactions = {};
+ Reactions = (Rknames(indcs_of_reactions));
+ legend(Reactions);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
 figure;
 plot(Sol.x,sum(dydt));
 legend('dydtSum');
@@ -166,8 +202,22 @@ for i = 1:length(species_in_graph)
     idcs(i) = find(strcmp(species,species_in_graph{i}));  
 end
 
-semilogx(Sol.x,Sol.y(idcs,:))
+plot(Sol.x,Sol.y(idcs,:))
 legend(species_in_graph);
+
+% YrPrAoBooidc = find(strcmp(species,'YrPrAoBoo'));
+% indcs_of_reactions = find(S(YrPrAoBooidc,:)); 
+% idcs = [];
+% 
+% for i = 1:length(indcs_of_reactions)
+%     idcs = find(S(:,indcs_of_reactions(i)));
+%     k = [i,:] 
+% end 
+% 
+% figure;
+% 
+% for i = 1:length(indcs_of_reactions)
+
 
 % plot(Sol.x, sum(Sol.y(idcs,:)));
  
