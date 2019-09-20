@@ -160,6 +160,40 @@ end
 
 
 
+
+ SumIndex1 = find(contains(species, 'YrPrAo'));
+ SumIndex2 = find(contains(species, 'YoPrAr'));
+ SumIndex3 = find(contains(species, 'YrPrAr'));
+ SumIndex4 = find(contains(species, 'YoPrAo'));
+ SumIndex5 = find(contains(species, 'YoPoAr'));
+ SumIndex6 = find(contains(species, 'YoPoAo'));
+ 
+ figure; 
+ species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
+ 
+ semilogx(Sol.x, sum(Sol.y(SumIndex1,:)))
+ hold on
+ semilogx(Sol.x, sum(Sol.y(SumIndex2,:)))
+ hold on
+ semilogx(Sol.x, sum(Sol.y(SumIndex3,:)))
+ hold on
+ semilogx(Sol.x, sum(Sol.y(SumIndex4,:)))
+ hold on 
+ semilogx(Sol.x, sum(Sol.y(SumIndex5,:)))
+ hold on
+ semilogx(Sol.x, sum(Sol.y(SumIndex6,:)))
+
+ legend(species_in_graph); 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  figure('Name','Y-Vals')
  species_in_graph = {'YoPrArBoo','YoPrAoBoo','YrPrAo'};
  idcs = [];
@@ -182,13 +216,6 @@ end
  
  
  
- 
- 
- 
- 
- 
- 
-
 figure;
 plot(Sol.x,sum(dydt));
 legend('dydtSum');

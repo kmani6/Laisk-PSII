@@ -1,5 +1,5 @@
 function dydt = LaiskPS2ODES(t,y,k,rate_inds,S) 
-fprintf([num2str(t),'\n']);
+
 
 nrxn = length(rate_inds); 
 
