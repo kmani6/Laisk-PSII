@@ -98,7 +98,7 @@ FXo = find(strcmp(Ynames, 'FXo'));
 FDo = find(strcmp(Ynames, 'FDo'));
 Cytfo = find(strcmp(Ynames, 'Cytfo')); 
 O2 = find(strcmp(Ynames, 'O2')); 
-F = find(strcmp(Ynames, 'F')); 
+Fl = find(strcmp(Ynames, 'Fl')); 
  
 PS1T = k(a2)*k(Chl)/k(PSU2); 
 PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
@@ -134,7 +134,9 @@ k(Div1) = Div1Val;
 k(Div2) = Div2Val; 
 k(Div3) = Div3Val; 
 k(Div4) = Div4Val; 
- 
+
+
+
 tstart = tspan(1);
 tend = tspan(2);
  
@@ -144,13 +146,18 @@ for i = 1:length(Ynames)
     index = find(strcmp(species,Ynames(i)));
     yinitial(index) = y0(i);
 end
- 
+
 [kconst] = LaiskKconstants(analysis_name);
  
+Fo = LaiskFluorescence(Ynames,knames,k,yinitial);
+ytest = yinitial;
+ytest(YrPrAoBoo) = 0;
+ytest(YrPrArBrr) = PS2T;
+Fm =  LaiskFluorescence(Ynames,knames,k,ytest);
 % Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
 %Sol.x(1) = Sol.x(2)/100;
-t = linspace(0, .01, 10000);
-Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S,Ynames,knames),t,yinitial);
+t = linspace(0, .01, 1000);
+Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),k,rate_inds,S,Ynames,knames),t,yinitial);
 dydt = [];
 % for i = 1:length(Sol.x)
 %     dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
@@ -193,7 +200,7 @@ Sol = Sol';
  
  
  figure; 
- species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
+ species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl',"Fl from ODE"};
  
  semilogx(t, sum(Sol(SumIndex1,:)))
  hold on
@@ -206,8 +213,10 @@ Sol = Sol';
  semilogx(t, sum(Sol(SumIndex5,:)))
  hold on
  semilogx(t, sum(Sol(SumIndex6,:)))
+%  hold on
+%  semilogx(t, Fl);
  hold on
- semilogx(t, Fl);
+ semilogx(t, Sol(end,:));
  
  legend(species_in_graph); 
  
