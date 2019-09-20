@@ -1,4 +1,4 @@
-function dydt = LaiskPS2ODES(t,y,k,rate_inds,S) 
+function dydt = LaiskPS2ODES(t,y,k,rate_inds,S,Ynames,knames) 
 fprintf([num2str(t),'\n']);
 
 nrxn = length(rate_inds); 
@@ -11,10 +11,9 @@ end
  
 dydt = S*r; 
 
-if t>0
-    foo = 1;   
-    
-end
+dFl = dLaiskFluorescence(Ynames,knames,k,y);
+dydt(end+1) = dFl;
+
 end
 
 

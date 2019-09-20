@@ -30,15 +30,15 @@ a2 = find(strcmp(knames, 'a2'));
 b1d = find(strcmp(knames, 'b1d'));
 b2d = find(strcmp(knames, 'b2d'));
 Chl = find(strcmp(knames, 'Chl')); 
-CytfT = find(strcmp(knames, 'Chl')); 
-FDT = find(strcmp(knames, 'Chl')); 
-jd = find(strcmp(knames, 'Chl')); 
-kb6f = find(strcmp(knames, 'Chl')); 
-kcytf = find(strcmp(knames, 'Chl')); 
-kf = find(strcmp(knames, 'Chl')); 
-kfd = find(strcmp(knames, 'Chl')); 
-kfx = find(strcmp(knames, 'Chl')); 
-kn = find(strcmp(knames, 'Chl')); 
+CytfT = find(strcmp(knames, 'CytfT')); 
+FDT = find(strcmp(knames, 'FDT')); 
+jd = find(strcmp(knames, 'jd')); 
+kb6f = find(strcmp(knames, 'kb6f')); 
+kcytf = find(strcmp(knames, 'kcytf')); 
+kf = find(strcmp(knames, 'kf')); 
+kfd = find(strcmp(knames, 'kfd')); 
+kfx = find(strcmp(knames, 'kfx')); 
+kn = find(strcmp(knames, 'kn')); 
 kp = find(strcmp(knames, 'kp'));
 kpc = find(strcmp(knames, 'kpc'));
 kr = find(strcmp(knames, 'kr')); 
@@ -57,7 +57,7 @@ PSU2 = find(strcmp(knames,'PSU2'));
 rqd = find(strcmp(knames,'rqd'));
 rqr = find(strcmp(knames,'rqr'));
 b1r = find(strcmp(knames,'b1r'));
-kq = find(strcmp(knames, 'kq')); 
+kq = find(strcmp(knames,'kq')); 
 P700T = find(strcmp(knames, 'P700T'));
 FXT = find(strcmp(knames, 'FXT')); 
  
@@ -112,7 +112,7 @@ y0 = y0*PS2T;
 k(P700T) = PS1T; 
 k(FXT) = PS1T; 
  
-Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
+%Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
  
 mult1 = find(strcmp(knames,'n2*kp/(1+kp+kn+kr)'));
 mult2 = find(strcmp(knames,'n2*kp/(1+kp+kn)')); 
@@ -150,7 +150,7 @@ end
 % Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
 %Sol.x(1) = Sol.x(2)/100;
 t = linspace(0, .01, 10000);
-Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),t,yinitial);
+Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S,Ynames,knames),t,yinitial);
 dydt = [];
 % for i = 1:length(Sol.x)
 %     dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
@@ -187,8 +187,11 @@ dydt = [];
 % 
 %  legend(species_in_graph); 
 % 
-%  
- Sol = Sol';
+% 
+Sol = Sol';
+ Fl = LaiskFluorescence(Ynames,knames,k,Sol); 
+ 
+ 
  figure; 
  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
  
@@ -203,14 +206,26 @@ dydt = [];
  semilogx(t, sum(Sol(SumIndex5,:)))
  hold on
  semilogx(t, sum(Sol(SumIndex6,:)))
-
+ hold on
+ semilogx(t, Fl);
+ 
  legend(species_in_graph); 
  
+
  
+ 
+ 
+%  Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol.y(y(YoPoAo),:)+Sol.y(y(YoPoAoBoo),:)...
+%      +Sol.y(y(YoPoAoBro),:)+Sol.y(y(YoPoAoBrr),:)+Sol.y(y(YoPoAr),:)...
+%      +Sol.y(y(YoPoArBoo),:)+Sol.y(y(YoPoArBro),:)+Sol.y(y(YoPoArBrr),:)...
+%      +1/(1+k(kp)+k(kn)+k(kr))*(Sol.y(y(YoPrAo),:)+Sol.y(y(YoPrAoBoo),:)...
+%      +Sol.y(y(YoPrAoBro),:)+Sol.y(y(YoPrAoBrr),:))+1/(1+k(kn)+k(kr))*(Sol.y(y(YoPrAr),:)...
+%      +Sol.y(YoPrAoBoo)+Sol.y(y(YoPrArBro),:)+Sol.y(y(YoPrArBrr),:)...
+%      +1/(1+k(kp)+k(kn))*(Sol.y(y(YrPrAo),:)+Sol.y(y(YrPrAoBoo),:)+Sol.y(y(YrPrAoBro),:)...
+%      +Sol.y(YoPrArBrr))+1/(1+k(kn))*Sol.y(y(YrPrAr),:)+Sol.y(y(YrPrArBoo),:)...
+%      +Sol.y(y(YrPrArBro),:)+Sol.y(y(YrPrArBrr),:)));
 
 %{
- 
-
  figure; 
  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
  

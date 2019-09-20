@@ -1,18 +1,18 @@
-function[Fl] = fluorescence(Ynames,knames,k,Sol)
-
-file1 = ['Plastoquinone reduction a','/LaiskConstants.xls'];
-[k,knames] = xlsread(file1);
- 
-file2 = ['Plastoquinone reduction a','/LaiskY.xls'];
-[y0,Ynames] = xlsread(file2);
- 
-% file2 = [analysis_name,'/LaiskY.xls'];
-% [y0,Ynames] = xlsread(file2);
+function[dFl] = dLaiskFluorescence(Ynames,knames,k,Sol)
 
 kn = find(strcmp(knames,'kn'));
 kp = find(strcmp(knames,'kp'));
 kr = find(strcmp(knames,'kr')); 
 kq = find(strcmp(knames,'kq')); 
+
+PFD = find(strcmp(knames, 'PFD'));
+a2 = find(strcmp(knames, 'a2'));
+Labs = find(strcmp(knames,'Labs'));
+PSU1 = find(strcmp(knames,'PSU1'));
+Chl = find(strcmp(knames, 'Chl')); 
+PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
+
+n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
 
 YoPoAo = find(strcmp(Ynames,'YoPoAo')); 
 YoPoAoBoo = find(strcmp(Ynames,'YoPoAoBoo')); 
@@ -37,6 +37,16 @@ YrPrArBro = find(strcmp(Ynames,'YrPrArBro'));
 YoPrArBrr = find(strcmp(Ynames,'YoPrArBrr')); 
 YrPrArBrr = find(strcmp(Ynames,'YrPrArBrr')); 
 
-Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol.y(y(YoPoAo),:)+Sol.y(y(YoPoAoBoo),:)+Sol.y(y(YoPoAoBro),:)+Sol.y(y(YoPoAoBrr),:)+Sol.y(y(YoPoAr),:)+Sol.y(y(YoPoArBoo),:)+Sol.y(y(YoPoArBro),:)+Sol.y(y(YoPoArBrr),:)+1/(1+k(kp)+k(kn)+k(kr))*(Sol.y(y(YoPrAo),:)+Sol.y(y(YoPrAoBoo),:)+Sol.y(y(YoPrAoBro),:)+Sol.y(y(YoPrAoBrr),:))+1/(1+k(kn)+k(kr))*(Sol.y(y(YoPrAr),:)+Sol.y(YoPrAoBoo)+Sol.y(y(YoPrArBro),:)+Sol.y(y(YoPrArBrr),:) + 1/(1+k(kp)+k(kn))*(Sol.y(y(YrPrAo),:)+Sol.y(y(YrPrAoBoo),:)+Sol.y(y(YrPrAoBro),:)+Sol.y(YoPrArBrr))+1/(1+k(kn))*Sol.y(y(YrPrAr),:)+Sol.y(y(YrPrArBoo),:)+Sol.y(y(YrPrArBro),:)+Sol.y(y(YrPrArBrr),:)));
+Fl = 1/(1+k(kn)+k(kr)+k(kq))*Sol(YoPoAo,:)+Sol(YoPoAoBoo,:)...
+     +Sol(YoPoAoBro,:)+Sol(YoPoAoBrr,:)+Sol(YoPoAr,:)...
+     +Sol(YoPoArBoo,:)+Sol(YoPoArBro,:)+Sol(YoPoArBrr,:)...
+     +1/(1+k(kp)+k(kn)+k(kr))*(Sol(YoPrAo,:)+Sol(YoPrAoBoo,:)...
+     +Sol(YoPrAoBro,:)+Sol(YoPrAoBrr,:))+1/(1+k(kn)+k(kr))*(Sol(YoPrAr,:)...
+     +Sol(YoPrAoBoo,:)+Sol(YoPrArBro,:)+Sol(YoPrArBrr,:)...
+     +1/(1+k(kp)+k(kn))*(Sol(YrPrAo,:)+Sol(YrPrAoBoo,:)...
+     +Sol(YrPrAoBro,:)+Sol(YoPrArBrr))+1/(1+k(kn))*Sol(YrPrAr,:)...
+     +Sol(YrPrArBoo,:)+Sol(YrPrArBro,:)+Sol(YrPrArBrr,:));
+ 
+dFl = n2*(1-Fl); 
 
 end
