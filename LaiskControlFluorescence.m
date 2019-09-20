@@ -152,10 +152,10 @@ end
 t = linspace(0, .01, 10000);
 Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),t,yinitial);
 dydt = [];
-for i = 1:length(Sol.x)
-    dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
-    r(:,i) = LaiskRates(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
-end
+% for i = 1:length(Sol.x)
+%     dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
+%     r(:,i) = LaiskRates(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
+% end
 
 
 
@@ -170,24 +170,24 @@ end
  SumIndex5 = find(contains(species, 'YoPoAr'));
  SumIndex6 = find(contains(species, 'YoPoAo'));
  
- figure; 
- species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
- 
- semilogx(Sol.x, sum(Sol.y(SumIndex1,:)))
- hold on
- semilogx(Sol.x, sum(Sol.y(SumIndex2,:)))
- hold on
- semilogx(Sol.x, sum(Sol.y(SumIndex3,:)))
- hold on
- semilogx(Sol.x, sum(Sol.y(SumIndex4,:)))
- hold on 
- semilogx(Sol.x, sum(Sol.y(SumIndex5,:)))
- hold on
- semilogx(Sol.x, sum(Sol.y(SumIndex6,:)))
-
- legend(species_in_graph); 
-
- 
+%  figure; 
+%  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
+%  
+%  semilogx(Sol.x, sum(Sol.y(SumIndex1,:)))
+%  hold on
+%  semilogx(Sol.x, sum(Sol.y(SumIndex2,:)))
+%  hold on
+%  semilogx(Sol.x, sum(Sol.y(SumIndex3,:)))
+%  hold on
+%  semilogx(Sol.x, sum(Sol.y(SumIndex4,:)))
+%  hold on 
+%  semilogx(Sol.x, sum(Sol.y(SumIndex5,:)))
+%  hold on
+%  semilogx(Sol.x, sum(Sol.y(SumIndex6,:)))
+% 
+%  legend(species_in_graph); 
+% 
+%  
  Sol = Sol';
  figure; 
  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
