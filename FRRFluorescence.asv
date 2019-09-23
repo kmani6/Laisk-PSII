@@ -1,7 +1,14 @@
-function[Sol] = LaiskControlFluorescence(tspan,analysis_name)
- 
-maxtime = tspan(end);
-tmax  = tspan(2); 
+function[Sol] = FRRFluorescence(analysis_name)
+
+file1 = [analysis_name,'/experimental_parameters'];
+[parameters, parameter_names] = xlsread(file1);
+n_flashes = parameters(1);
+flash_duration = parameters(2);
+flash_interval = parameters(3);
+train_interval = parameters(4);
+n_trains = parameters(5);
+
+maxtime = n_trains*(n_flashes*(flash_duration+ flash_interval) + train_interval);
  
 file1 = [analysis_name,'/LaiskConstants.xls'];
 [k,knames] = xlsread(file1);
@@ -137,9 +144,9 @@ k(Div4) = Div4Val;
 
 
 
-tstart = tspan(1);
-tend = tspan(2);
- 
+% tstart = tspan(1);
+% tend = tspan(2);
+%  
 [species,S,rate_inds] = Laisk_read_excel_model('Laisk DCMU.1');
 yinitial = zeros(length(y0),1);
 for i = 1:length(Ynames)
@@ -148,19 +155,75 @@ for i = 1:length(Ynames)
 end
 
 [kconst] = LaiskKconstants(analysis_name);
- 
-Fo = LaiskFluorescence(species,knames,k,yinitial);
-ytest = yinitial;
-ytest(YrPrAoBoo) = 0;
-ytest(YrPrArBrr) = PS2T;
-Fm =  LaiskFluorescence(species,knames,k,ytest);
-% Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
-%Sol.x(1) = Sol.x(2)/100;
-% t = linspace(0, .01, 1000);
-t = logspace(-5, log10(tend), 1000);
-t(1) = 0;
-Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
-dydt = [];
+
+
+%THE FOLLOWING CODE NEEDS TO GO IN ITS OWN FUNCTION IN ORDER TO KEEP THINGS
+%CONCISE-------------------------------------------------------------------
+ys = {};
+Fs = {};
+ts = {};
+for train = 1:n_trains
+    for flash = 1:n_flashes
+        k(mult1) = mult1Val;
+        k(mult2) = mult2Val;    
+        t = logspace(-8, log10(flash_duration), 200);
+        t(1) = 0;
+        Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,parameters),t,yinitial);
+        Sol = Sol';
+        ys{end+1} = Sol; %calculate the species evolution during the light
+        ts{end+1} = (train-1)*train_interval + (flash-1)*(flash_duration+flash_interval)+t; %save the times used
+        Fs{end+1} = LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
+        yinitial = Sol(:,end); %initialize the y vector for the next iteration 
+        
+        k(mult1) = 0;
+        k(mult2) = 0;            
+        t = logspace(-5, log10(flash_interval), 200); %assign the time interval appropriate for the dark interval)
+        t(1) = 0;
+        Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,parameters),t,yinitial);
+        Sol = Sol';
+        ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
+        ts{end+1} = (train-1)*train_interval + (flash-1)*(flash_duration+flash_interval) + flash_duration +t; %save the times used
+        Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
+        yinitial = Sol(:,end); %initialize the y vector for the next iteration 
+    end
+    k(mult1) = 0;
+    k(mult2) = 0;            
+    t = logspace(-5, log10(train_interval), 1000); %assign the time interval appropriate for the dark interval)
+    t(1) = 0;
+    Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,parameters),t,yinitial);
+    Sol = Sol';
+    ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
+    ts{end+1} = (train-1)*train_interval + n_flashes*(flash_duration+flash_interval)+t; %save the times used
+    Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
+    SumIndex1 = find(contains(species, 'YrPrAo'));
+    SumIndex2 = find(contains(species, 'YoPrAr'));
+    SumIndex3 = find(contains(species, 'YrPrAr'));
+    SumIndex4 = find(contains(species, 'YoPrAo'));
+    SumIndex5 = find(contains(species, 'YoPoAr'));
+    SumIndex6 = find(contains(species, 'YoPoAo'));
+    plot(ts{i}, sum(Sol(SumIndex1,:)),'r')
+    plot(ts{i}, sum(Sol(SumIndex2,:)),'g')
+    plot(ts{i}, sum(Sol(SumIndex3,:)),'b')
+    plot(ts{i}, sum(Sol(SumIndex4,:)),'c')
+    plot(ts{i}, sum(Sol(SumIndex5,:)),'m')
+    plot(ts{i}, sum(Sol(SumIndex6,:)),'k')
+    yinitial = Sol(:,end); %initialize the y vector for the next iteration    
+end
+        
+
+figure;
+hold on
+for i = 1:length(ts)
+    if length(ts{i}) == length(Fs{i})
+        plot(ts{i}, Fs{i})
+    end
+end
+
+
+% t = logspace(-5, -2, 1000);
+% t(1) = 0;
+% Sol = ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,parameters),t,yinitial);
+% dydt = [];
 % for i = 1:length(Sol.x)
 %     dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
 %     r(:,i) = LaiskRates(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
@@ -178,6 +241,21 @@ dydt = [];
  SumIndex4 = find(contains(species, 'YoPrAo'));
  SumIndex5 = find(contains(species, 'YoPoAr'));
  SumIndex6 = find(contains(species, 'YoPoAo'));
+ 
+  figure; 
+ species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
+ hold on
+ for i = 1:length(ts)
+     Sol = ys{i};
+     plot(ts{i}, sum(Sol(SumIndex1,:)),'r')
+     plot(ts{i}, sum(Sol(SumIndex2,:)),'g')
+     plot(ts{i}, sum(Sol(SumIndex3,:)),'b')
+     plot(ts{i}, sum(Sol(SumIndex4,:)),'c')
+     plot(ts{i}, sum(Sol(SumIndex5,:)),'m')
+     plot(ts{i}, sum(Sol(SumIndex6,:)),'k')
+ end
+ legend(species_in_graph); 
+
  
 %  figure; 
 %  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
@@ -201,60 +279,29 @@ Sol = Sol';
  Fl = LaiskFluorescence(species,knames,k,Sol); 
  
  
-%  figure; 
-%  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
-%  
-%  semilogx(t, sum(Sol(SumIndex1,:)))
-%  hold on
-%  semilogx(t, sum(Sol(SumIndex2,:)))
-%  hold on
-%  semilogx(t, sum(Sol(SumIndex3,:)))
-%  hold on
-%  semilogx(t, sum(Sol(SumIndex4,:)))
-%  hold on 
-%  semilogx(t, sum(Sol(SumIndex5,:)))
-%  hold on
-%  semilogx(t, sum(Sol(SumIndex6,:)))
-%  hold on
-%  semilogx(t, Fl);
-% %  hold on
-% %  semilogx(t, Sol(end,:));
-%  
-%  legend(species_in_graph); 
- 
-
  figure; 
  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
  
- plot(t, sum(Sol(SumIndex1,:)))
+ semilogx(t, sum(Sol(SumIndex1,:)))
  hold on
- plot(t, sum(Sol(SumIndex2,:)))
+ semilogx(t, sum(Sol(SumIndex2,:)))
  hold on
- plot(t, sum(Sol(SumIndex3,:)))
+ semilogx(t, sum(Sol(SumIndex3,:)))
  hold on
- plot(t, sum(Sol(SumIndex4,:)))
+ semilogx(t, sum(Sol(SumIndex4,:)))
  hold on 
- plot(t, sum(Sol(SumIndex5,:)))
+ semilogx(t, sum(Sol(SumIndex5,:)))
  hold on
- plot(t, sum(Sol(SumIndex6,:)))
+ semilogx(t, sum(Sol(SumIndex6,:)))
  hold on
- plot(t, Fl);
+ semilogx(t, Fl);
 %  hold on
 %  semilogx(t, Sol(end,:));
  
  legend(species_in_graph); 
  
 
-figure;
-species_in_graph = {'PQ', 'PQH2'};
-idcs = [];
-
-for i = 1:length(species_in_graph)
-    idcs(i) = find(strcmp(species,species_in_graph{i}));  
-end
-
-plot(t,Sol(idcs,:))
-legend(species_in_graph);
+ 
  
  
 %  Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol.y(y(YoPoAo),:)+Sol.y(y(YoPoAoBoo),:)...
