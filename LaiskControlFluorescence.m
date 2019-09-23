@@ -160,14 +160,20 @@ Fm =  LaiskFluorescence(species,knames,k,ytest);
 t = logspace(-5, log10(tend), 1000);
 t(1) = 0;
 Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+Sol = Sol';
 dydt = [];
-% for i = 1:length(Sol.x)
-%     dydt(:,i) = LaiskPS2ODES(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
-%     r(:,i) = LaiskRates(Sol.x(i),Sol.y(:,i),k(kconst),rate_inds,S);
-% end
+for i = 1:length(t)
+%     dydt(:,i) = LaiskPS2ODES(t,Sol(:,i),k(kconst),k,rate_inds,S,species,knames);
+    r(:,i) = LaiskRates(t,Sol(:,i),k(kconst),rate_inds,S);
+end
 
 
-
+for i =1:length(Rknames)
+    figure;
+    plot(t,r(i,:))
+    legend(Rknames(i))
+    
+end
 
 
 
@@ -197,8 +203,7 @@ dydt = [];
 %  legend(species_in_graph); 
 % 
 % 
-Sol = Sol';
- Fl = LaiskFluorescence(species,knames,k,Sol); 
+Fl = LaiskFluorescence(species,knames,k,Sol); 
  
  
 %  figure; 
@@ -245,6 +250,9 @@ Sol = Sol';
  legend(species_in_graph); 
  
 
+
+ 
+ 
 figure;
 species_in_graph = {'PQ', 'PQH2'};
 idcs = [];
@@ -256,7 +264,23 @@ end
 plot(t,Sol(idcs,:))
 legend(species_in_graph);
  
+
  
+figure;
+species_in_graph = species(find(contains(species,'Y')));
+idcs = [];
+
+for i = 1:length(species_in_graph)
+    idcs(i) = find(strcmp(species,species_in_graph{i}));  
+end
+
+plot(t,Sol(idcs,:))
+legend(species_in_graph);
+ 
+rs = [];
+
+
+
 %  Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol.y(y(YoPoAo),:)+Sol.y(y(YoPoAoBoo),:)...
 %      +Sol.y(y(YoPoAoBro),:)+Sol.y(y(YoPoAoBrr),:)+Sol.y(y(YoPoAr),:)...
 %      +Sol.y(y(YoPoArBoo),:)+Sol.y(y(YoPoArBro),:)+Sol.y(y(YoPoArBrr),:)...
