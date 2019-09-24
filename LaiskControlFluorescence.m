@@ -140,7 +140,7 @@ k(Div4) = Div4Val;
 tstart = tspan(1);
 tend = tspan(2);
  
-[species,S,rate_inds] = Laisk_read_excel_model('Laisk DCMU.1');
+[species,S,rate_inds] = Laisk_read_excel_model(analysis_name);
 yinitial = zeros(length(y0),1);
 for i = 1:length(Ynames)
     index = find(strcmp(species,Ynames(i)));
@@ -168,7 +168,7 @@ for i = 1:length(t)
 end
 
 
-for i =1:length(Rknames)
+for i =length(Rknames):-1:1
     figure;
     plot(t,r(i,:))
     legend(Rknames(i))
