@@ -156,8 +156,8 @@ ytest(YrPrArBrr) = PS2T;
 Fm =  LaiskFluorescence(species,knames,k,ytest);
 % Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
 %Sol.x(1) = Sol.x(2)/100;
-% t = linspace(0, .01, 1000);
-t = logspace(-5, log10(tend), 1000);
+t = linspace(0, tend, 5000);
+% t = logspace(-5, log10(tend), 5000);
 t(1) = 0;
 Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
 Sol = Sol';
@@ -168,14 +168,14 @@ for i = 1:length(t)
 end
 
 
-for i =length(Rknames):-1:1
-    figure;
-    plot(t,r(i,:))
-    legend(Rknames(i))
-    
-end
-
-
+% for i =length(Rknames):-1:1
+%     figure;
+%     plot(t,r(i,:))
+%     legend(Rknames(i))
+%     
+% end
+% 
+% 
 
 
  SumIndex1 = find(contains(species, 'YrPrAo'));
