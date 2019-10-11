@@ -28,6 +28,6 @@ YrPrArBro = find(strcmp(Ynames,'YrPrArBro'));
 YoPrArBrr = find(strcmp(Ynames,'YoPrArBrr')); 
 YrPrArBrr = find(strcmp(Ynames,'YrPrArBrr')); 
 
-Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol.y(y(YoPoAo),:)+Sol.y(y(YoPoAoBoo),:)+Sol.y(y(YoPoAoBro),:)+Sol.y(y(YoPoAoBrr),:)+Sol.y(y(YoPoAr),:)+Sol.y(y(YoPoArBoo),:)+Sol.y(y(YoPoArBro),:)+Sol.y(y(YoPoArBrr),:)+1/(1+k(kp)+k(kn)+k(kr))*(Sol.y(y(YoPrAo),:)+Sol.y(y(YoPrAoBoo),:)+Sol.y(y(YoPrAoBro),:)+Sol.y(y(YoPrAoBrr),:))+1/(1+k(kn)+k(kr))*(Sol.y(y(YoPrAr),:)+Sol.y(YoPrAoBoo)+Sol.y(y(YoPrArBro),:)+Sol.y(y(YoPrArBrr),:) + 1/(1+k(kp)+k(kn))*(Sol.y(y(YrPrAo),:)+Sol.y(y(YrPrAoBoo),:)+Sol.y(y(YrPrAoBro),:)+Sol.y(YoPrArBrr))+1/(1+k(kn))*Sol.y(y(YrPrAr),:)+Sol.y(y(YrPrArBoo),:)+Sol.y(y(YrPrArBro),:)+Sol.y(y(YrPrArBrr),:)));
+Fl = 1/(1+k(kn)+k(kr)+k(kq))*(Sol(y(YoPoAo),:)+Sol(y(YoPoAoBoo),:)+Sol(y(YoPoAoBro),:)+Sol(y(YoPoAoBrr),:)+Sol(y(YoPoAr),:)+Sol(y(YoPoArBoo),:)+Sol(y(YoPoArBro),:)+Sol(y(YoPoArBrr),:)+1/(1+k(kp)+k(kn)+k(kr))*(Sol(y(YoPrAo),:)+Sol(y(YoPrAoBoo),:)+Sol(y(YoPrAoBro),:)+Sol(y(YoPrAoBrr),:))+1/(1+k(kn)+k(kr))*(Sol(y(YoPrAr),:)+Sol(YoPrAoBoo)+Sol(y(YoPrArBro),:)+Sol(y(YoPrArBrr),:) + 1/(1+k(kp)+k(kn))*(Sol(y(YrPrAo),:)+Sol(y(YrPrAoBoo),:)+Sol(y(YrPrAoBro),:)+Sol(YoPrArBrr))+1/(1+k(kn))*Sol(y(YrPrAr),:)+Sol(y(YrPrArBoo),:)+Sol(y(YrPrArBro),:)+Sol(y(YrPrArBrr),:)));
 
 end
