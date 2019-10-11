@@ -110,20 +110,17 @@ n1 = k(PFD)*k(Labs)*(1-k(a2))/PS1T;
 n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
 y0(P700r) = PS1T/PS2T;
 y0(FXo) = PS1T/PS2T;
+
+
+k(oqr) = k(oqr)/PS2T;
+k(rqr) = k(rqr)/PS2T;
+k(kb6f) = k(kb6f)/PS2T;
+k(kcytf) = k(kcytf)/PS2T;
+k(kpc) = k(kpc);
+k(kfx) = k(kfx);
 k(P700T) = PS1T/PS2T; 
 k(FXT) = PS1T/PS2T; 
-
-
-% y0 = y0*PS2T;
-% k(oqr) = k(oqr)/PS2T;
-% k(rqr) = k(rqr)/PS2T;
-% k(kb6f) = k(kb6f)/PS2T;
-% k(kcytf) = k(kcytf)/PS2T;
-% k(kpc) = k(kpc)/PS2T;
-% k(kfx) = k(kfx)/PS2T;
-% k(P700T) = PS1T;
-% k(FXT) = PS1T;
-% k(kfd) = k(kfd)/PS2T;
+k(kfd) = k(kfd);
 
  
 %Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
@@ -224,7 +221,7 @@ end
 % 
 % 
 Fl = LaiskFluorescence(species,knames,k,Sol); 
-figure(1);
+figure;
 hold on
 plot(t, Fl);
 legend(num2str(k(PFD)));
