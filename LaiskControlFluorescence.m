@@ -102,25 +102,37 @@ Fl = find(strcmp(Ynames, 'Fl'));
  
 PS1T = k(a2)*k(Chl)/k(PSU2); 
 PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
+PS2TR = (1-k(a2))*(k(Chl)/k(PSU1));
+
 % PS1T = 1; 
 % PS2T = 1;
 n1 = k(PFD)*k(Labs)*(1-k(a2))/PS1T;
 n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
-y0 = y0*PS2T; 
- 
- 
-k(P700T) = PS1T; 
-k(FXT) = PS1T; 
+y0(P700r) = PS1T/PS2T;
+y0(FXo) = PS1T/PS2T;
+
+
+k(oqr) = k(oqr);
+k(rqr) = k(rqr);
+k(kb6f) = k(kb6f);
+k(kcytf) = k(kcytf);
+k(kpc) = k(kpc);
+k(kfx) = k(kfx);
+k(P700T) = PS1T/PS2T; 
+k(FXT) = PS1T/PS2T; 
+k(kfd) = k(kfd);
+
  
 %Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
  
 mult1 = find(strcmp(knames,'n2*kp/(1+kp+kn+kr)'));
 mult2 = find(strcmp(knames,'n2*kp/(1+kp+kn)')); 
-Div1 = find(strcmp(Rknames(:,2),'kpc/kEpc'));
-Div2 = find(strcmp(Rknames(:,2),'kcytf/kEcytf'));
-Div3 = find(strcmp(Rknames(:,2),'kfx/kEfx'));
-Div4 = find(strcmp(Rknames(:,2),'kb6f/kEb6f'));
- 
+Div1 = find(strcmp(knames,'kpc/kEpc'));
+Div2 = find(strcmp(knames,'kcytf/kEcytf'));
+Div3 = find(strcmp(knames,'kfx/kEfx'));
+Div4 = find(strcmp(knames,'kb6f/kEb6f'));
+n1idx = find(strcmp(knames,'n1'));
+
 mult1Val = n2*k(kp)/(1+k(kp)+k(kn)+k(kr));
 mult2Val = n2*k(kp)/(1+k(kp)+k(kn));
 Div1Val = k(kpc)/k(kEpc);
@@ -129,11 +141,12 @@ Div3Val = k(kfx)/k(kEfx);
 Div4Val = k(kb6f)/k(kEb6f);
  
 k(mult1) = mult1Val;
-k(mult2) = mult2Val; 
-k(Div1) = Div1Val; 
-k(Div2) = Div2Val; 
+k(mult2) = mult2Val;
+k(Div1) = Div1Val;
+k(Div2) = Div2Val;
 k(Div3) = Div3Val; 
-k(Div4) = Div4Val; 
+k(Div4) = Div4Val;
+k(n1idx) = n1;
 
 
 
@@ -159,6 +172,10 @@ Fm =  LaiskFluorescence(species,knames,k,ytest);
 t = linspace(0, tend, 5000);
 % t = logspace(-5, log10(tend), 5000);
 t(1) = 0;
+oqr_inds = find(kconst == oqr);
+rqr_inds = find(kconst == rqr);
+PQ_idx = find(strcmp(species,'PQ'));
+PQH2_idx = find(strcmp(species,'PQH2'));
 Sol = ode2(@(t,y) LaiskPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
 Sol = Sol';
 dydt = [];
@@ -228,31 +245,58 @@ Fl = LaiskFluorescence(species,knames,k,Sol);
 %  legend(species_in_graph); 
  
 
- figure; 
- species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
- 
- plot(t, sum(Sol(SumIndex1,:)))
- hold on
- plot(t, sum(Sol(SumIndex2,:)))
- hold on
- plot(t, sum(Sol(SumIndex3,:)))
- hold on
- plot(t, sum(Sol(SumIndex4,:)))
- hold on 
- plot(t, sum(Sol(SumIndex5,:)))
- hold on
- plot(t, sum(Sol(SumIndex6,:)))
- hold on
- plot(t, Fl);
+%  figure; 
+%  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
+%  
+%  plot(t, sum(Sol(SumIndex1,:)))
 %  hold on
-%  semilogx(t, Sol(end,:));
- 
- legend(species_in_graph); 
+%  plot(t, sum(Sol(SumIndex2,:)))
+%  hold on
+%  plot(t, sum(Sol(SumIndex3,:)))
+%  hold on
+%  plot(t, sum(Sol(SumIndex4,:)))
+%  hold on 
+%  plot(t, sum(Sol(SumIndex5,:)))
+%  hold on
+%  plot(t, sum(Sol(SumIndex6,:)))
+%  hold on
+%  plot(t, Fl);
+% %  hold on
+% %  semilogx(t, Sol(end,:));
+%  
+%  legend(species_in_graph); 
  
 
+figure;
+hold on
+species_in_graph = {{'PQH2','PQ'}, {'Cytfr','Cytfo'} {'PCr','PCo'}, {'P700r','P700o'}, {'FDr','FDo'}};
+lgd = {};
+for i = 1:length(species_in_graph)
+    
+    current_species = species_in_graph{i};
+    idcs = [];
+    for j = 1:length(current_species)
+        idcs(end+1) = find(strcmp(species, current_species{j}));        
+    end
+    redox_state = Sol(idcs(1),:)./(Sol(idcs(1),:) + Sol(idcs(2),:));
+    plot(t,redox_state);
+    lgd{end+1} = (strcat(current_species{1}, "/(", current_species{2}, " + ", current_species{1}, ")"))  ;
+end
+plot(t,Fl);
+lgd{end+1} = "Fl";
+legend(lgd);
+figure; 
+i1 = find(strcmp(species,'P700o'));
+i2 = find(strcmp(species,'P700r'));
+y1 = Sol(i1,:);
+y2 = Sol(i2,:);
+plot(t, [y1; y2]); 
+legend('P700o', 'P700r')
+ foo = 1;
+ 
+ 
+ 
 
- 
- 
 figure;
 species_in_graph = {'PQ', 'PQH2'};
 idcs = [];
@@ -263,11 +307,10 @@ end
 
 plot(t,Sol(idcs,:))
 legend(species_in_graph);
- 
 
- 
+
 figure;
-species_in_graph = species(find(contains(species,'Y')));
+species_in_graph = {'PCr', 'PCo'};
 idcs = [];
 
 for i = 1:length(species_in_graph)
@@ -276,8 +319,56 @@ end
 
 plot(t,Sol(idcs,:))
 legend(species_in_graph);
- 
-rs = [];
+
+figure;
+species_in_graph = {'Cytfr', 'Cytfo'};
+idcs = [];
+
+for i = 1:length(species_in_graph)
+    idcs(i) = find(strcmp(species,species_in_graph{i}));  
+end
+
+plot(t,Sol(idcs,:))
+legend(species_in_graph);
+
+figure;
+species_in_graph = {'FXr', 'FXo'};
+idcs = [];
+
+for i = 1:length(species_in_graph)
+    idcs(i) = find(strcmp(species,species_in_graph{i}));  
+end
+
+plot(t,Sol(idcs,:))
+legend(species_in_graph);
+
+figure;
+species_in_graph = {'FDr', 'FDo'};
+idcs = [];
+
+for i = 1:length(species_in_graph)
+    idcs(i) = find(strcmp(species,species_in_graph{i}));  
+end
+
+plot(t,Sol(idcs,:))
+legend(species_in_graph);
+
+foo = 1;
+%  
+% 
+%  
+% figure;
+% species_in_graph = species(find(contains(species,'Y')));
+% idcs = [];
+% 
+% for i = 1:length(species_in_graph)
+%     idcs(i) = find(strcmp(species,species_in_graph{i}));  
+% end
+% 
+% plot(t,Sol(idcs,:))
+% legend(species_in_graph);
+%  
+% rs = [];
 
 
 
