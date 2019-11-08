@@ -14,18 +14,21 @@ function GraphFig3(analyses_name)
          Chl = find(strcmp(knames, 'Chl'));
          PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
                  
-         semilogx(t, Fl/PS2T,'o', 'color', colors{i},'MarkerSize',2);
+         semilogx(t(2:end), Fl(2:end),'o','color', colors{i},'MarkerSize',4);
          hold on
-         semilogx(t, Fl1/PS2T,'o','color',colors{i},'MarkerSize',2); 
-        
-         species_in_graph{end+1} = [analyses_name{i},'Fl'];
-         species_in_graph{end+1} = [analyses_name{i}, 'Fl1'];
+         semilogx(t(2:end), Fl1(2:end),'o','color',colors{i},'MarkerSize',4); 
+       
+%          species_in_graph{end+1} = [analyses_name{i},'Fl'];
+%          species_in_graph{end+1} = [analyses_name{i}, 'Fl1'];
          
     end
     
-         legend(species_in_graph); 
-         ylim([0 1.2])
-         xlim([0 .1])
+         %legend({'jd 2000','jd 20','jd 200'}); 
+         axis([.00001 .1 0 1.2])
+%          ylim([0 1.2])
+%          xlim([1e-5 .1])
+         set(gca,'FontSize',22)
+         set(gca,'linewidth',2)
          set(gca,'color','white')
                      
 end 

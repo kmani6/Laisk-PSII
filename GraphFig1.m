@@ -14,9 +14,9 @@ function GraphFig1(analyses_name)
          Chl = find(strcmp(knames, 'Chl'));
          PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
                  
-         plot(t, Fl,'o', 'color', colors{i},'MarkerSize',2);
+         plot(t, Fl,'o', 'color', colors{i},'MarkerSize',3);
          hold on
-         plot(t, Fl1,'o','color',colors{i},'MarkerSize',2); 
+         plot(t, Fl1,'o','color',colors{i},'MarkerSize',3); 
          
 
          
@@ -25,7 +25,9 @@ function GraphFig1(analyses_name)
          
     end
     
-         legend(species_in_graph); 
+%          legend(species_in_graph); 
+         set(gca,'FontSize',22)
+         set(gca,'linewidth',1.5)
          ylim([0 1.2])
          xlim([0 .0002])
 %          set(gca,'color','none')

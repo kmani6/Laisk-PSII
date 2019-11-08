@@ -11,7 +11,7 @@ file2 = [analysis_name,'/LaiskY.xls'];
  
 file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);
- 
+ c
 %k = rand(37,1);
 %y0 = rand(38,1); 
  

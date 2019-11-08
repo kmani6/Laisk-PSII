@@ -9,7 +9,6 @@ function GraphFig4(analyses_name)
         a2 = find(strcmp(knames, 'a2'));
         Chl = find(strcmp(knames, 'Chl'));
         PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
-        
                  
         SumIndex1 = find(contains(species, 'YrPrAo'));
         SumIndex2 = find(contains(species, 'YoPrAr'));
@@ -19,43 +18,50 @@ function GraphFig4(analyses_name)
         SumIndex6 = find(contains(species, 'YoPoAo'));
       
         Color = 'magenta' ;
-        S = scatter(t, sum(Sol(SumIndex1,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex1,:)),[],Color);
         ylim([0 1.2])
         set(gca,'xscale','log')
-        set(S, 'SizeData', 4)
+        set(S, 'SizeData', 8)
         hold on
         
         Color = [1 .5 0];
-        S = scatter(t, sum(Sol(SumIndex2,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex2,:)),[],Color);
         set(gca,'xscale','log')
-        set(S, 'SizeData', 4)
+        set(S, 'SizeData', 8)
         hold on
         
         Color = 'cyan' ;
-        S = scatter(t, sum(Sol(SumIndex3,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex3,:)),[],Color);
         set(gca,'xscale','log')
-        set(S, 'SizeData', 4)
+        set(S, 'SizeData', 8)
         hold on
         
         Color = [.60 0 0] ;
-        S = scatter(t, sum(Sol(SumIndex4,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex4,:)),[],Color);
         set(gca,'xscale','log')
-        set(S, 'SizeData', 4)
+        set(S, 'SizeData', 8)
         hold on
         
         Color = 'green' ;
-        S = scatter(t, sum(Sol(SumIndex5,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex5,:)),[],Color);
         set(gca,'xscale','log')
-        set(S, 'SizeData', 2)
+        set(S, 'SizeData', 8)
         hold on
        
         Color = [.75 0 0] ;
-        S = scatter(t, sum(Sol(SumIndex6,:)/PS2T),[],Color);
+        S = scatter(t, sum(Sol(SumIndex6,:)),[],Color);
         set(gca,'xscale','log')
-        set(S, 'SizeData', 4)
+        set(S, 'SizeData', 7)
         hold on
         
-       legend(species_in_graph);
+        semilogx(t, Fl,'o', 'color','red' ,'MarkerSize',4);
+        hold on
+        
+        %legend(species_in_graph);
+         set(gca,'FontSize',20)
+         set(gca,'linewidth',2)
+         set(gca,'color','white')
+  
            
 end 
 

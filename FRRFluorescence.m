@@ -13,8 +13,8 @@ maxtime = n_trains*(n_flashes*(flash_duration+ flash_interval) + train_interval)
 file1 = [analysis_name,'/LaiskConstants.xls'];
 [k,knames] = xlsread(file1);
  
-file2 = [analysis_name,'/LaiskY.xls'];
-[y0,Ynames] = xlsread(file2);
+file1 = [analysis_name,'/LaiskY.xls'];
+[y0,Ynames] = xlsread(file1);
  
 file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);

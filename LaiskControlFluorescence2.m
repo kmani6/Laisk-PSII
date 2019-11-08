@@ -169,7 +169,7 @@ ytest(YrPrArBrr) = PS2T;
 Fm =  LaiskFluorescence(species,knames,k,ytest);
 % Sol = ode15s(@(t,y) LaiskPS2ODES(t,y,k(kconst),rate_inds,S),[tstart,tend],yinitial);
 %Sol.x(1) = Sol.x(2)/100;
-t = linspace(0, tend, 5000);
+t = linspace(0, tend, 50000);
 % t = logspace(-5, log10(tend), 5000);
 t(1) = 0;
 % oqr_inds = find(kconst == oqr);
@@ -205,6 +205,13 @@ end
  SumIndex4 = find(contains(species, 'YoPrAo'));
  SumIndex5 = find(contains(species, 'YoPoAr'));
  SumIndex6 = find(contains(species, 'YoPoAo'));
+ 
+ YoPoArBrr = find(contains(species, 'YoPoArBrr')); 
+ figure;
+ plot(t, Sol(YoPoArBrr,:),'o','color','red','MarkerSize',1.5);
+ 
+ 
+ 
  
 %  figure; 
 %  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
@@ -271,24 +278,27 @@ Fl = LaiskFluorescence(species,knames,k,Sol);
 %  legend(species_in_graph); 
  
 
-figure;
-hold on
-species_in_graph = {{'PQH2','PQ'}, {'Cytfr','Cytfo'} {'PCr','PCo'}, {'P700r','P700o'}, {'FDr','FDo'}};
-lgd = {};
-for i = 1:length(species_in_graph)
-    
-    current_species = species_in_graph{i};
-    idcs = [];
-    for j = 1:length(current_species)
-        idcs(end+1) = find(strcmp(species, current_species{j}));        
-    end
-    redox_state = Sol(idcs(1),:)./(Sol(idcs(1),:) + Sol(idcs(2),:));
-    plot(t,redox_state);
-    lgd{end+1} = (strcat(current_species{1}, "/(", current_species{2}, " + ", current_species{1}, ")"))  ;
-end
-plot(t,Fl);
-lgd{end+1} = "Fl";
-legend(lgd);
+% figure;
+% hold on
+% species_in_graph = {{'PQH2','PQ'}, {'Cytfr','Cytfo'} {'PCr','PCo'}, {'P700r','P700o'}, {'FDr','FDo'}};
+% lgd = {};
+% for i = 1:length(species_in_graph)
+%     
+%     current_species = species_in_graph{i};
+%     idcs = [];
+%     for j = 1:length(current_species)
+%         idcs(end+1) = find(strcmp(species, current_species{j}));        
+%     end
+%     redox_state = Sol(idcs(1),:)./(Sol(idcs(1),:) + Sol(idcs(2),:));
+%     plot(t,redox_state,'o','MarkerSize',3.5);
+%     lgd{end+1} = (strcat(current_species{1}, "/(", current_species{2}, " + ", current_species{1}, ")"))  ;
+% end
+% plot(t,Fl,'o','MarkerSize',3.5);
+% set(gca,'FontSize',20)
+% set(gca,'linewidth',2)
+% ylim([0 1.2])
+% lgd{end+1} = "Fl";
+% legend(lgd);
 figure; 
 i1 = find(strcmp(species,'P700o'));
 i2 = find(strcmp(species,'P700r'));
@@ -297,9 +307,7 @@ y2 = Sol(i2,:);
 plot(t, [y1; y2]); 
 legend('P700o', 'P700r')
  foo = 1;
- 
- 
- 
+
 
 figure;
 species_in_graph = {'PQ', 'PQH2'};

@@ -18,7 +18,13 @@ function GraphFig2(analyses_name)
         species_in_graph{end+1} = [analyses_name{i},'YrPrArBoo'];
         species_in_graph{end+1} = [analyses_name{i}, 'YoPrArBoo'];
     end
-    
-        legend(species_in_graph);
+        
+        %legend(species_in_graph);
+         set(gca,'FontSize',20)
+         set(gca,'linewidth',2)
+         set(gca,'color','white')
+         ylim([0 1.2])
+         xlim([0 .001])
+     
         
 end 
