@@ -1,4 +1,4 @@
-function dydt = LaiskPS2ODES(t,y,krxn,k,rate_inds,S,Ynames,knames,PQ,PQH2,oqr1,rqr1)
+function dydt = LaiskPS2ODES(t,y,krxn,k,rate_inds,S,Ynames,knames)
 
 % if (y(PQH2)~=0)
 %     krxn(rqr1) = krxn(rqr1)*y(PQH2);
@@ -11,7 +11,7 @@ function dydt = LaiskPS2ODES(t,y,krxn,k,rate_inds,S,Ynames,knames,PQ,PQH2,oqr1,r
 % end
 
 
-fprintf([num2str(t),'\n']);
+% fprintf([num2str(t),'\n']);
 
 nrxn = length(rate_inds);
 
