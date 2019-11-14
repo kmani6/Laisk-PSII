@@ -56,6 +56,7 @@ function GraphFig9(analyses_name)
          set(gca,'FontSize',20)
          set(gca,'linewidth',2)
          set(gca,'color','white')
+         axis([.0001 .1 0 1])
             
 
 end 

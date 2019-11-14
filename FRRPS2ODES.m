@@ -1,10 +1,10 @@
-function dydt = LaiskPS2ODES(t,y,k,k_init, kinds,rate_inds,S,Ynames,knames,PQ,PQH2,oqrinds,rqrinds,species, reactions) 
+function dydt = FRRPS2ODES(t,y,k,k_init, kinds,rate_inds,S,Ynames,knames,PQ,PQH2,oqrinds,rqrinds,species, reactions) 
 % fprintf([num2str(t),'\n']);
 
 nrxn = length(rate_inds); 
-
-k(oqrinds) = k(oqrinds)/y(PQ);
-k(rqrinds) = k(rqrinds)*y(PQH2);
+% 
+% k(oqrinds) = k(oqrinds)/y(PQ);
+% k(rqrinds) = k(rqrinds)*y(PQH2);
 
 % h = light_on(t);
 r = zeros(nrxn,1);

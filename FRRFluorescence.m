@@ -19,19 +19,6 @@ file1 = [analysis_name,'/LaiskY.xls'];
 file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);
  
-%k = rand(37,1);
-%y0 = rand(38,1); 
- 
-% a2 = find(strcmp(knames,'a2'));
-% Chl = find(strcmp(knames,'Chl'));
-% PSU1 = find(strcmp(knames,'PSU1'));
-% P700o = find(strcmp(Ynames, 'P700o'));
-% FXo = find(strcmp(Ynames, 'FXo'));
-% 
-% PS1T = (1-k(a2))*(k(Chl)/k(PSU1));
-% y(P700o) = PS1T;
-% y(FXo) = PS1T; 
- 
 PFD = find(strcmp(knames, 'PFD')); 
 a2 = find(strcmp(knames, 'a2'));
 b1d = find(strcmp(knames, 'b1d'));
@@ -109,18 +96,13 @@ Fl = find(strcmp(Ynames, 'Fl'));
  
 PS1T = k(a2)*k(Chl)/k(PSU2); 
 PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
-% PS1T = 1; 
-% PS2T = 1;
 n1 = k(PFD)*k(Labs)*(1-k(a2))/PS1T;
 n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
 y0 = y0*PS2T; 
  
- 
 k(P700T) = PS1T; 
 k(FXT) = PS1T; 
- 
-%Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
- 
+  
 mult1 = find(strcmp(knames,'n2*kp/(1+kp+kn+kr)'));
 mult2 = find(strcmp(knames,'n2*kp/(1+kp+kn)')); 
 Div1 = find(strcmp(knames,'kpc/kEpc'));
@@ -143,10 +125,7 @@ k(Div2) = Div2Val;
 k(Div3) = Div3Val; 
 k(Div4) = Div4Val; 
 k(n1id) = n1;
-
-% tstart = tspan(1);
-% tend = tspan(2);
-%  
+ 
 [species,S,rate_inds] = Laisk_read_excel_model(analysis_name);
 yinitial = zeros(length(y0),1);
 for i = 1:length(Ynames)
@@ -157,7 +136,6 @@ end
 [kconst] = LaiskKconstants(analysis_name);
 oqrinds = find(kconst == oqr);
 rqrinds = find(kconst == rqr);
-
 
 %THE FOLLOWING CODE NEEDS TO GO IN ITS OWN FUNCTION IN ORDER TO KEEP THINGS
 %CONCISE-------------------------------------------------------------------
@@ -171,12 +149,12 @@ PQH2 = find(strcmp(species, 'PQH2'));
 k(mult1) = 0;
 k(mult2) = 0;    
 k(n1id) = 0;
-%         t = logspace(-8, log10(flash_duration), 200);
-%         t(1) = 0;
-dark_adaptation_time = 180;
+%t = logspace(-8, log10(flash_duration), 200);
+%t(1) = 0;
+dark_adaptation_time = 180; %3-5 minutes typically
 t = linspace(0, dark_adaptation_time, dark_adaptation_time*1000);
 tic;
-Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,kconst,rate_inds,S,species,knames,PQ,PQH2,oqrinds,rqrinds,species,Rknames(:,1)),t,yinitial);
+Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
 toc
 Sol = Sol';
 ys{end+1} = Sol; %calculate the species evolution during the light
@@ -200,15 +178,15 @@ for irxn = 1:nrxn
     for j =1:length(ttmp)
         r(irxn,j) = kmod(irxn)*prod(ytmp(rate_inds{irxn},j));
     end
-    figure; 
-    subplot(length(rate_inds{irxn})+1,1,1)
-    plot(ttmp, r(irxn,:))
-    legend(Rknames(irxn,1))
-    for k = 1:length(rate_inds{irxn})
-        subplot(length(rate_inds{irxn})+1,1,k+1)
-        plot(ttmp, ytmp(rate_inds{irxn}(k),:))
-        legend(species(rate_inds{irxn}(k)))
-    end
+%     figure; 
+%     subplot(length(rate_inds{irxn})+1,1,1)
+%     plot(ttmp, r(irxn,:))
+%     legend(Rknames(irxn,1))
+%     for k = 1:length(rate_inds{irxn})
+%         subplot(length(rate_inds{irxn})+1,1,k+1)
+%         plot(ttmp, ytmp(rate_inds{irxn}(k),:))
+%         legend(species(rate_inds{irxn}(k)))
+%     end
 end
 
 
@@ -222,9 +200,9 @@ for train = 1:n_trains
         k(n1id) = n1;
 %         t = logspace(-8, log10(flash_duration), 200);
 %         t(1) = 0;
-        t = linspace(0, flash_duration, flash_duration*5e6);
+        t = linspace(0, flash_duration, flash_duration*1e6);
         tic;
-        Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,PQ,PQH2,oqr,rqr),t,yinitial);
+        Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
         toc
         Sol = Sol';
         ys{end+1} = Sol; %calculate the species evolution during the light
@@ -239,7 +217,7 @@ for train = 1:n_trains
 %         t(1) = 0;
         t = linspace(0, flash_interval, flash_interval*1e6);
         tic;
-        Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,PQ,PQH2,oqr,rqr),t,yinitial);
+        Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
         toc
         tic;
         Sol = Sol';
@@ -261,7 +239,7 @@ for train = 1:n_trains
 %     t(1) = 0;
     t = linspace(0, train_interval, train_interval*1e4);
     tic;
-    Sol =  ode2(@(t,y) FRRPS2ODES(t,y,k(kconst),k,rate_inds,S,species,knames,PQ,PQH2,oqr,rqr),t,yinitial);
+    Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
     toc
     Sol = Sol';
     ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
@@ -287,15 +265,15 @@ for train = 1:n_trains
     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
         
-
-figure;
-hold on
-for i = 1:length(ts)
-    if length(ts{i}) == length(Fs{i})
-        plot(ts{i}, Fs{i}, 'r')
-    end
-end
-legend('Fluorescence');
+% 
+% figure;
+% hold on
+% for i = 1:length(ts)
+%     if length(ts{i}) == length(Fs{i})
+%         plot(ts{i}, Fs{i}, 'r')
+%     end
+% end
+% legend('Fluorescence');
 
 
 % t = logspace(-5, -2, 1000);
@@ -308,21 +286,21 @@ legend('Fluorescence');
 % end
 
 
-graph_colors = 'bgrcmyk';
-figure;
-species_in_graph = {'PQ', 'PQH2'};
-hold on
-idcs = [];
-for i = 1:length(species_in_graph)
-    idcs(end+1) = find(strcmp(species, species_in_graph(i)));
-end
-for i = 1:length(ts)
-    y = ys{i};
-    for j = 1:length(species_in_graph)
-        plot(ts{i},y(idcs(j),:),graph_colors(j))
-    end
-end
-legend(species_in_graph)
+% graph_colors = 'bgrcmyk';
+% figure;
+% species_in_graph = {'PQ', 'PQH2'};
+% hold on
+% idcs = [];
+% for i = 1:length(species_in_graph)
+%     idcs(end+1) = find(strcmp(species, species_in_graph(i)));
+% end
+% for i = 1:length(ts)
+%     y = ys{i};
+%     for j = 1:length(species_in_graph)
+%         plot(ts{i},y(idcs(j),:),graph_colors(j))
+%     end
+% end
+% legend(species_in_graph)
 % 
 % for s = 1:length(species)
 %     if rem(s-1,4) == 0
@@ -367,20 +345,20 @@ nrxn = length(Rknames);
  SumIndex4 = find(contains(species, 'YoPrAo'));
  SumIndex5 = find(contains(species, 'YoPoAr'));
  SumIndex6 = find(contains(species, 'YoPoAo'));
- 
-figure; 
- species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
- hold on
- for i = 1:length(ts)
-     Sol = ys{i};
-     plot(ts{i}, sum(Sol(SumIndex1,:)),'r')
-     plot(ts{i}, sum(Sol(SumIndex2,:)),'g')
-     plot(ts{i}, sum(Sol(SumIndex3,:)),'b')
-     plot(ts{i}, sum(Sol(SumIndex4,:)),'c')
-     plot(ts{i}, sum(Sol(SumIndex5,:)),'m')
-     plot(ts{i}, sum(Sol(SumIndex6,:)),'k')
- end
- legend(species_in_graph); 
+%  
+% figure; 
+%  species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo','Fl'};
+%  hold on
+%  for i = 1:length(ts)
+%      Sol = ys{i};
+%      plot(ts{i}, sum(Sol(SumIndex1,:)),'r')
+%      plot(ts{i}, sum(Sol(SumIndex2,:)),'g')
+%      plot(ts{i}, sum(Sol(SumIndex3,:)),'b')
+%      plot(ts{i}, sum(Sol(SumIndex4,:)),'c')
+%      plot(ts{i}, sum(Sol(SumIndex5,:)),'m')
+%      plot(ts{i}, sum(Sol(SumIndex6,:)),'k')
+%  end
+%  legend(species_in_graph); 
 
  
 %  figure; 
