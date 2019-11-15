@@ -22,30 +22,38 @@ title("Fd redox state")
 figure(4)
 title("Fluorescence")
 
+figure(5)
+title("time")
+counter = 1;
 for i = 2:length(ts)
     t = ts{i};
-    y = ys{i};
-    
-    figure(1)
-    redox = y(PQH2,:)./(y(PQH2,:) + y(PQ,:));
+    figure(5)
     hold on
-    plot(t, redox,'b')
-    figure(2)
-    redox = y(PCr,:)./(y(PCr,:) + y(PCo,:));
-    hold on
-    plot(t, redox,'b')
-    figure(3)
-    hold on
-    redox = y(FDr,:)./(y(FDr,:) + y(FDo,:));
-    plot(t, redox,'b')
-    clear redox
-    if ~isempty(Fs{i})
-        F = Fs{i};
-        figure(4)
-        hold on
-        plot(t,F,'b');
-    end
-    
+    plot(counter:counter+length(t)-1, t,'b')
+    counter = counter+length(t);
+%     
+%     y = ys{i};
+%     
+%     figure(1)
+%     redox = y(PQH2,:)./(y(PQH2,:) + y(PQ,:));
+%     hold on
+%     plot(t, redox,'b')
+%     figure(2)
+%     redox = y(PCr,:)./(y(PCr,:) + y(PCo,:));
+%     hold on
+%     plot(t, redox,'b')
+%     figure(3)
+%     hold on
+%     redox = y(FDr,:)./(y(FDr,:) + y(FDo,:));
+%     plot(t, redox,'b')
+%     clear redox
+%     if ~isempty(Fs{i})
+%         F = Fs{i};
+%         figure(4)
+%         hold on
+%         plot(t,F,'b');
+%     end
+%     
 end
 
 
