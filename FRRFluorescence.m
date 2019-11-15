@@ -181,7 +181,7 @@ k(n1idx) = 0;
 %t = logspace(-8, log10(flash_duration), 200);
 %t(1) = 0;
 dark_adaptation_time = 30; %3-5 minutes typically
-t = linspace(0, dark_adaptation_time, dark_adaptation_time*5e4);
+t = linspace(0, dark_adaptation_time, dark_adaptation_time*1e5);
 tic;
 Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
 toc
@@ -266,7 +266,7 @@ for train = 1:n_trains
     k(n1idx) = 0;
 %     t = logspace(-5, log10(0.025), 100); %assign the time interval appropriate for the dark interval)
 %     t(1) = 0;
-    t = linspace(0, train_interval, train_interval*1e4);
+    t = linspace(0, train_interval, train_interval*1e5);
     tic;
     Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
     toc
