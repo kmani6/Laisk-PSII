@@ -1,5 +1,6 @@
 function plot_FRRFluorescence(analysis_name)
 load([analysis_name, '/FRR_results.mat'])
+Print_Params(analysis_name)
 
 PQ = find(strcmp(species, 'PQ'));
 PQH2 = find(strcmp(species, 'PQH2'));
@@ -7,7 +8,6 @@ PCo = find(strcmp(species, 'PCo'));
 PCr = find(strcmp(species, 'PCr'));
 FDo = find(strcmp(species, 'FDo'));
 FDr = find(strcmp(species, 'FDr'));
-
 
 figure(1)
 figure(2)
@@ -20,20 +20,20 @@ for i = 1:length(ts)
     
     figure(1)
     hold on
-    plot(t, y(PQH2,:)./(y(:,PQH2) + y(:,PQ)),'r')
+    plot(t, y(PQH2,:)./(y(PQH2,:) + y(PQ,:)),'r')
     figure(2)
     hold on
-    plot(t, y(PCr,:)./(y(:,PCr) + y(:,PCo)),'r')
+    plot(t, y(PCr,:)./(y(PCr,:) + y(PCo,:)),'r')
     figure(3)
     hold on
-    plot(t, y(FDr,:)./(y(:,FDr) + y(FDo)),'r')
-%     if ~isempty(Fs(i))
-%         F = Fs{i};
-%         figure(4)
-%         hold on
-%         plot(t,F);
-%     end
-%     
+    plot(t, y(FDr,:)./(y(FDr,:) + y(FDo,:)),'r')
+    if ~isempty(Fs{i})
+        F = Fs{i};
+        figure(4)
+        hold on
+        plot(t,F);
+    end
+
 end
 
 

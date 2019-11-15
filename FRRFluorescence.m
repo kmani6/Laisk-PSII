@@ -1,4 +1,4 @@
-function[Sol] = FRRFluorescence(analysis_name)
+function FRRFluorescence(analysis_name)
 
 file1 = [analysis_name,'/experimental_parameters'];
 [parameters, parameter_names] = xlsread(file1);
@@ -293,8 +293,8 @@ for train = 1:n_trains
 %     legend(species_in_graph); 
     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
-save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames')
-       
+
+save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames')    
 % 
 % figure;
 % hold on
