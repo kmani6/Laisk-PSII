@@ -13,11 +13,24 @@ maxtime = n_trains*(n_flashes*(flash_duration+ flash_interval) + train_interval)
 file1 = [analysis_name,'/LaiskConstants.xls'];
 [k,knames] = xlsread(file1);
  
-file1 = [analysis_name,'/LaiskY.xls'];
-[y0,Ynames] = xlsread(file1);
+file2 = [analysis_name,'/LaiskY.xls'];
+[y0,Ynames] = xlsread(file2);
  
 file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);
+ 
+%k = rand(37,1);
+%y0 = rand(38,1); 
+ 
+% a2 = find(strcmp(knames,'a2'));
+% Chl = find(strcmp(knames,'Chl'));
+% PSU1 = find(strcmp(knames,'PSU1'));
+% P700o = find(strcmp(Ynames, 'P700o'));
+% FXo = find(strcmp(Ynames, 'FXo'));
+% 
+% PS1T = (1-k(a2))*(k(Chl)/k(PSU1));
+% y(P700o) = PS1T;
+% y(FXo) = PS1T; 
  
 PFD = find(strcmp(knames, 'PFD')); 
 a2 = find(strcmp(knames, 'a2'));
@@ -96,20 +109,36 @@ Fl = find(strcmp(Ynames, 'Fl'));
  
 PS1T = k(a2)*k(Chl)/k(PSU2); 
 PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
+PS2TR = (1-k(a2))*(k(Chl)/k(PSU1));
+
+% PS1T = 1; 
+% PS2T = 1;
 n1 = k(PFD)*k(Labs)*(1-k(a2))/PS1T;
 n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
-y0 = y0*PS2T; 
+y0(P700r) = PS1T/PS2T;
+y0(FXo) = PS1T/PS2T;
+
+
+k(oqr) = k(oqr);
+k(rqr) = k(rqr);
+k(kb6f) = k(kb6f);
+k(kcytf) = k(kcytf);
+k(kpc) = k(kpc);
+k(kfx) = k(kfx);
+k(P700T) = PS1T/PS2T; 
+k(FXT) = PS1T/PS2T; 
+k(kfd) = k(kfd);
+
  
-k(P700T) = PS1T; 
-k(FXT) = PS1T; 
-  
+%Vb6f = k(kb6f)*(y0(PQH2)*y0(Cytfo)-y0(Cytfr)*(y0(PQ)/k(kEb6f)));
+ 
 mult1 = find(strcmp(knames,'n2*kp/(1+kp+kn+kr)'));
 mult2 = find(strcmp(knames,'n2*kp/(1+kp+kn)')); 
 Div1 = find(strcmp(knames,'kpc/kEpc'));
 Div2 = find(strcmp(knames,'kcytf/kEcytf'));
 Div3 = find(strcmp(knames,'kfx/kEfx'));
 Div4 = find(strcmp(knames,'kb6f/kEb6f'));
-n1id = find(strcmp(knames, 'n1'));
+n1idx = find(strcmp(knames,'n1'));
 
 mult1Val = n2*k(kp)/(1+k(kp)+k(kn)+k(kr));
 mult2Val = n2*k(kp)/(1+k(kp)+k(kn));
@@ -119,12 +148,14 @@ Div3Val = k(kfx)/k(kEfx);
 Div4Val = k(kb6f)/k(kEb6f);
  
 k(mult1) = mult1Val;
-k(mult2) = mult2Val; 
-k(Div1) = Div1Val; 
-k(Div2) = Div2Val; 
+k(mult2) = mult2Val;
+k(Div1) = Div1Val;
+k(Div2) = Div2Val;
 k(Div3) = Div3Val; 
-k(Div4) = Div4Val; 
-k(n1id) = n1;
+k(Div4) = Div4Val;
+k(n1idx) = n1;
+
+
  
 [species,S,rate_inds] = Laisk_read_excel_model(analysis_name);
 yinitial = zeros(length(y0),1);
@@ -134,9 +165,7 @@ for i = 1:length(Ynames)
 end
 
 [kconst] = LaiskKconstants(analysis_name);
-oqrinds = find(kconst == oqr);
-rqrinds = find(kconst == rqr);
-
+ 
 %THE FOLLOWING CODE NEEDS TO GO IN ITS OWN FUNCTION IN ORDER TO KEEP THINGS
 %CONCISE-------------------------------------------------------------------
 ys = {};
@@ -148,11 +177,11 @@ PQH2 = find(strcmp(species, 'PQH2'));
 % dark adapt the system
 k(mult1) = 0;
 k(mult2) = 0;    
-k(n1id) = 0;
+k(n1idx) = 0;
 %t = logspace(-8, log10(flash_duration), 200);
 %t(1) = 0;
-dark_adaptation_time = 180; %3-5 minutes typically
-t = linspace(0, dark_adaptation_time, dark_adaptation_time*1000);
+dark_adaptation_time = 30; %3-5 minutes typically
+t = linspace(0, dark_adaptation_time, dark_adaptation_time*5e4);
 tic;
 Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
 toc
@@ -167,17 +196,17 @@ yinitial = Sol(:,end); %initialize the y vector for the next iteration
 % plot(t,Sol(i,:));
 % legend(species(i));
 % end
-
-kmod = k(kconst);
-nrxn = length(Rknames);
-
-r = [];
-ttmp = cell2mat(ts(end));
-ytmp = cell2mat(ys(end));
-for irxn = 1:nrxn
-    for j =1:length(ttmp)
-        r(irxn,j) = kmod(irxn)*prod(ytmp(rate_inds{irxn},j));
-    end
+% 
+% kmod = k(kconst);
+% nrxn = length(Rknames);
+% 
+% r = [];
+% ttmp = cell2mat(ts(end));
+% ytmp = cell2mat(ys(end));
+% for irxn = 1:nrxn
+%     for j =1:length(ttmp)
+%         r(irxn,j) = kmod(irxn)*prod(ytmp(rate_inds{irxn},j));
+%     end
 %     figure; 
 %     subplot(length(rate_inds{irxn})+1,1,1)
 %     plot(ttmp, r(irxn,:))
@@ -187,8 +216,8 @@ for irxn = 1:nrxn
 %         plot(ttmp, ytmp(rate_inds{irxn}(k),:))
 %         legend(species(rate_inds{irxn}(k)))
 %     end
-end
-
+% end
+% 
 
 for train = 1:n_trains
     fprintf('train %i \n', train)
@@ -197,7 +226,7 @@ for train = 1:n_trains
 
         k(mult1) = mult1Val;
         k(mult2) = mult2Val;    
-        k(n1id) = n1;
+        k(n1idx) = n1;
 %         t = logspace(-8, log10(flash_duration), 200);
 %         t(1) = 0;
         t = linspace(0, flash_duration, flash_duration*1e6);
@@ -212,7 +241,7 @@ for train = 1:n_trains
         
         k(mult1) = 0;
         k(mult2) = 0;      
-        k(n1id) = 0;
+        k(n1idx) = 0;
 %         t = logspace(-5, log10(flash_interval), 200); %assign the time interval appropriate for the dark interval)
 %         t(1) = 0;
         t = linspace(0, flash_interval, flash_interval*1e6);
@@ -234,7 +263,7 @@ for train = 1:n_trains
     end
     k(mult1) = 0;
     k(mult2) = 0;       
-    k(n1id) = 0;
+    k(n1idx) = 0;
 %     t = logspace(-5, log10(0.025), 100); %assign the time interval appropriate for the dark interval)
 %     t(1) = 0;
     t = linspace(0, train_interval, train_interval*1e4);
