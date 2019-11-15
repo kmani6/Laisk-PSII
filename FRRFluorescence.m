@@ -188,7 +188,7 @@ toc
 Sol = Sol';
 ys{end+1} = Sol; %calculate the species evolution during the light
 ts{end+1} = -dark_adaptation_time + t; %save the times used
-Fs{end+1} = LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
+Fs{end+1} = []; %save an empty fluorescence vector
 yinitial = Sol(:,end); %initialize the y vector for the next iteration 
 
 % for i =1:size(Sol,1)
@@ -236,7 +236,7 @@ for train = 1:n_trains
         Sol = Sol';
         ys{end+1} = Sol; %calculate the species evolution during the light
         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + (flash-1)*(flash_duration+flash_interval)+t; %save the times used
-        Fs{end+1} = [];%LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
+        Fs{end+1} = LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
         yinitial = Sol(:,end); %initialize the y vector for the next iteration 
         
         k(mult1) = 0;
@@ -274,12 +274,12 @@ for train = 1:n_trains
     ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
     ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t; %save the times used
     Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
-    SumIndex1 = find(contains(species, 'YrPrAo'));
-    SumIndex2 = find(contains(species, 'YoPrAr'));
-    SumIndex3 = find(contains(species, 'YrPrAr'));
-    SumIndex4 = find(contains(species, 'YoPrAo'));
-    SumIndex5 = find(contains(species, 'YoPoAr'));
-    SumIndex6 = find(contains(species, 'YoPoAo'));
+%     SumIndex1 = find(contains(species, 'YrPrAo'));
+%     SumIndex2 = find(contains(species, 'YoPrAr'));
+%     SumIndex3 = find(contains(species, 'YrPrAr'));
+%     SumIndex4 = find(contains(species, 'YoPrAo'));
+%     SumIndex5 = find(contains(species, 'YoPoAr'));
+%     SumIndex6 = find(contains(species, 'YoPoAo'));
 %     figure;
 %     species_in_graph = {'YrPrAo','YoPrAr','YrPrAr','YoPrAo','YoPoAr','YoPoAo'};
 %     plot(ts{end}, sum(Sol(SumIndex1,:)),'r')
@@ -291,7 +291,7 @@ for train = 1:n_trains
 %     plot(ts{end}, sum(Sol(SumIndex6,:)),'k')
 %     hold off
 %     legend(species_in_graph); 
-%     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
+    yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
 
 save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames','-v7.3')  
