@@ -294,7 +294,7 @@ for train = 1:n_trains
     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
 
-save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames')    
+save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames','-v7.3')  
 % 
 % figure;
 % hold on
