@@ -231,7 +231,7 @@ for train = 1:n_trains
 %         t(1) = 0;
         t = linspace(0, flash_duration, flash_duration*1e6);
         tic;
-        Sol = %ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+        Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
         toc
         Sol = Sol';
         ys{end+1} = Sol; %calculate the species evolution during the light
@@ -268,7 +268,7 @@ for train = 1:n_trains
 %     t(1) = 0;
     t = linspace(0, train_interval, train_interval*1e5);
     tic;
-    Sol =  [];%ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+    Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
     toc
     Sol = Sol';
     ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
