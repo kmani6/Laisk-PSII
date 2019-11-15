@@ -293,7 +293,8 @@ for train = 1:n_trains
 %     legend(species_in_graph); 
     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
-        
+save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames')
+       
 % 
 % figure;
 % hold on
