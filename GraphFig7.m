@@ -9,7 +9,7 @@ function GraphFig7(analyses_name)
         
         [Fl] = LaiskFluorescence(species,knames,k,Sol); 
         
-        semilogx(t, Fl);
+        semilogx(t, Fl,'o','MarkerSize',3);
         hold on
          
     end

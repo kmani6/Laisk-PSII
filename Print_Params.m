@@ -8,11 +8,10 @@ flash_interval = parameters(3);
 train_interval = parameters(4);
 n_trains = parameters(5);
 
-fprintf(n_flashes) = parameters(1); 
-
 identifier = analysis_name(1:end);
-fprintf(identifier,'\n',' n_flashes ',num2str(n_flashes), '\n',' flash_duration ',num2str(flash_duration),...
-    '\n',' flash_interval ',num2str(train_interval),'\n',' n_trains ', num2str(n_trains))
+x = [newline,identifier,newline, '-----------------------------', newline,'n_flashes               ',num2str(n_flashes),newline,'flash_duration          ',num2str(flash_duration),...
+    newline,'flash_interval          ',num2str(flash_interval),newline, 'train_interval          ',num2str(train_interval),newline,'n_trains                ',num2str(n_trains),newline]; 
+disp(x)
 
 end 
 
