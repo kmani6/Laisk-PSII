@@ -10,30 +10,42 @@ FDr = find(strcmp(species, 'FDr'));
 
 
 figure(1)
-figure(2)
-figure(3)
-figure(4)
+title("PQ redox state")
 
-for i = 1:length(ts)
+
+figure(2)
+title("PC redox state")
+
+figure(3)
+title("Fd redox state")
+
+figure(4)
+title("Fluorescence")
+
+for i = 2:length(ts)
     t = ts{i};
     y = ys{i};
     
     figure(1)
+    redox = y(PQH2,:)./(y(PQH2,:) + y(PQ,:));
     hold on
-    plot(t, y(PQH2,:)./(y(:,PQH2) + y(:,PQ)),'r')
+    plot(t, redox,'b')
     figure(2)
+    redox = y(PCr,:)./(y(PCr,:) + y(PCo,:));
     hold on
-    plot(t, y(PCr,:)./(y(:,PCr) + y(:,PCo)),'r')
+    plot(t, redox,'b')
     figure(3)
     hold on
-    plot(t, y(FDr,:)./(y(:,FDr) + y(FDo)),'r')
-%     if ~isempty(Fs(i))
-%         F = Fs{i};
-%         figure(4)
-%         hold on
-%         plot(t,F);
-%     end
-%     
+    redox = y(FDr,:)./(y(FDr,:) + y(FDo,:));
+    plot(t, redox,'b')
+    clear redox
+    if ~isempty(Fs{i})
+        F = Fs{i};
+        figure(4)
+        hold on
+        plot(t,F,'b');
+    end
+    
 end
 
 

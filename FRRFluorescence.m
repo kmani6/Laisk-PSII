@@ -188,7 +188,7 @@ toc
 Sol = Sol';
 ys{end+1} = Sol; %calculate the species evolution during the light
 ts{end+1} = -dark_adaptation_time + t; %save the times used
-Fs{end+1} = LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
+Fs{end+1} = [];%LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
 yinitial = Sol(:,end); %initialize the y vector for the next iteration 
 
 % for i =1:size(Sol,1)
