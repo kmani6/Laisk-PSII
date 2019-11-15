@@ -10,7 +10,7 @@ end
 
 dydt = S*r;
 
-dFl = dLaiskFluorescence(Ynames,knames,k,y);
+dFl = 0;% dLaiskFluorescence(Ynames,knames,k,y);
 dydt(end+1) = dFl;
 
 end
