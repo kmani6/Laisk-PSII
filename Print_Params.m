@@ -1,16 +1,18 @@
 function Print_Params(analysis_name)
 
+file1 = [analysis_name,'/experimental_parameters'];
+[parameters, parameter_names] = xlsread(file1);
+n_flashes = parameters(1);
+flash_duration = parameters(2);
+flash_interval = parameters(3);
+train_interval = parameters(4);
+n_trains = parameters(5);
+
+fprintf(n_flashes) = parameters(1); 
+
 identifier = analysis_name(1:end);
-fprintf('%s',identifier);
-
-fprintf('analysis_name')
-
-name = input('Enter your name: ');
-first = name(1);
-last = name(end);
-fprintf('Your name is: %s %nWith first and last letters: %c and %c%n',name,first,last);
-
-
+fprintf(identifier,'\n',' n_flashes ',num2str(n_flashes), '\n',' flash_duration ',num2str(flash_duration),...
+    '\n',' flash_interval ',num2str(train_interval),'\n',' n_trains ', num2str(n_trains))
 
 end 
 
