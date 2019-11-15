@@ -180,16 +180,17 @@ k(mult2) = 0;
 k(n1idx) = 0;
 %t = logspace(-8, log10(flash_duration), 200);
 %t(1) = 0;
-dark_adaptation_time = 30; %3-5 minutes typically
+dark_adaptation_time = 5; %3-5 minutes typically
 t = linspace(0, dark_adaptation_time, dark_adaptation_time*1e5);
+t_lims = [0,dark_adaptation_time];
 tic;
-Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+Sol =  ode15s(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t_lims,yinitial);
 toc
-Sol = Sol';
-ys{end+1} = Sol; %calculate the species evolution during the light
-ts{end+1} = -dark_adaptation_time + t; %save the times used
+% Sol = Sol';
+ys{end+1} = Sol.y; %calculate the species evolution during the light
+ts{end+1} = -dark_adaptation_time + Sol.x; %save the times used
 Fs{end+1} = []; %save an empty fluorescence vector
-yinitial = Sol(:,end); %initialize the y vector for the next iteration 
+yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
 
 % for i =1:size(Sol,1)
 % figure;
@@ -245,16 +246,17 @@ for train = 1:n_trains
 %         t = logspace(-5, log10(flash_interval), 200); %assign the time interval appropriate for the dark interval)
 %         t(1) = 0;
         t = linspace(0, flash_interval, flash_interval*1e6);
+        t_lims = [0,flash_interval];
         tic;
-        Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+        Sol = ode15s(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t_lims,yinitial);
         toc
         tic;
-        Sol = Sol';
+%         Sol = Sol';
         toc
-        ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
-        ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + (flash-1)*(flash_duration+flash_interval) + flash_duration +t; %save the times used
+        ys{end+1} = Sol.y; %calculate the species evolution during the dark between flashes
+        ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + (flash-1)*(flash_duration+flash_interval) + flash_duration +Sol.x; %save the times used
         Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
-        yinitial = Sol(:,end); %initialize the y vector for the next iteration 
+        yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
 %         subplot(1,3,1); plot(ts{end-1},Fs{end-1})
 %         foo = ys{end-1}; subplot(1,3,2); plot(ts{end-1},foo(1:end-1,:))
 %         foo = ys{end}; subplot(1,3,3); plot(ts{end},foo(1:end-1,:))
@@ -268,11 +270,11 @@ for train = 1:n_trains
 %     t(1) = 0;
     t = linspace(0, train_interval, train_interval*1e5);
     tic;
-    Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+    Sol = ode15s(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
     toc
-    Sol = Sol';
-    ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
-    ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t; %save the times used
+%     Sol = Sol';
+    ys{end+1} = Sol.y; %calculate the species evolution during the dark between flashes
+    ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+Sol.x; %save the times used
     Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
 %     SumIndex1 = find(contains(species, 'YrPrAo'));
 %     SumIndex2 = find(contains(species, 'YoPrAr'));
@@ -291,7 +293,7 @@ for train = 1:n_trains
 %     plot(ts{end}, sum(Sol(SumIndex6,:)),'k')
 %     hold off
 %     legend(species_in_graph); 
-    yinitial = Sol(:,end); %initialize the y vector for the next iteration    
+    yinitial = Sol.y(:,end); %initialize the y vector for the next iteration    
 end
 
 save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames','-v7.3')  
