@@ -231,12 +231,12 @@ for train = 1:n_trains
 %         t(1) = 0;
         t = linspace(0, flash_duration, flash_duration*1e6);
         tic;
-        Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+        Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
         toc
         Sol = Sol';
         ys{end+1} = Sol; %calculate the species evolution during the light
-        ts{end+1} = (train-1)*train_interval + (flash-1)*(flash_duration+flash_interval)+t; %save the times used
-        Fs{end+1} = LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
+        ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + (flash-1)*(flash_duration+flash_interval)+t; %save the times used
+        Fs{end+1} = [];%LaiskFluorescence(species,knames,k,Sol); %save the fluoprescence values
         yinitial = Sol(:,end); %initialize the y vector for the next iteration 
         
         k(mult1) = 0;
@@ -246,13 +246,13 @@ for train = 1:n_trains
 %         t(1) = 0;
         t = linspace(0, flash_interval, flash_interval*1e6);
         tic;
-        Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+        Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
         toc
         tic;
         Sol = Sol';
         toc
         ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
-        ts{end+1} = (train-1)*train_interval + (flash-1)*(flash_duration+flash_interval) + flash_duration +t; %save the times used
+        ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + (flash-1)*(flash_duration+flash_interval) + flash_duration +t; %save the times used
         Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
         yinitial = Sol(:,end); %initialize the y vector for the next iteration 
 %         subplot(1,3,1); plot(ts{end-1},Fs{end-1})
@@ -268,11 +268,11 @@ for train = 1:n_trains
 %     t(1) = 0;
     t = linspace(0, train_interval, train_interval*1e5);
     tic;
-    Sol =  ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
+    Sol = ode2(@(t,y) PS2ODES(y,k(kconst),k,rate_inds,S,species,knames),t,yinitial);
     toc
     Sol = Sol';
     ys{end+1} = Sol; %calculate the species evolution during the dark between flashes
-    ts{end+1} = (train-1)*train_interval + n_flashes*(flash_duration+flash_interval)+t; %save the times used
+    ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t; %save the times used
     Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
     SumIndex1 = find(contains(species, 'YrPrAo'));
     SumIndex2 = find(contains(species, 'YoPrAr'));
@@ -291,7 +291,7 @@ for train = 1:n_trains
 %     plot(ts{end}, sum(Sol(SumIndex6,:)),'k')
 %     hold off
 %     legend(species_in_graph); 
-    yinitial = Sol(:,end); %initialize the y vector for the next iteration    
+%     yinitial = Sol(:,end); %initialize the y vector for the next iteration    
 end
 
 save([analysis_name '/FRR_results.mat'], 'ts', 'Fs', 'ys', 'knames', 'kconst', 'k', 'species', 'Rknames','-v7.3')  
