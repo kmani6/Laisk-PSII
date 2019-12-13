@@ -1,4 +1,4 @@
-function [ts,ys, Fs, FvFm] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
+function [ts,ys, Fs, FvFm, O2] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... indeces used to calculate fluorescence
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
@@ -51,6 +51,8 @@ ts = {};
 ys = {};
 Fs = {};
 rs = {};
+O2 =  zeros(n_trains*n_flashes,1);
+O2ind = find(strcmp(species, 'O2'));
 % dark adapt the system
 k(mult1) = 0;
 k(mult2) = 0;    
@@ -64,7 +66,7 @@ Fs{end+1} = [];
 yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
 counter = 1;
 for train = 1:n_trains
-%     fprintf('train %i \n', train)
+    fprintf('train %i \n', train)
     if train == 9
         foo = 1;
     end
@@ -72,8 +74,15 @@ for train = 1:n_trains
         k(mult1) = mult1Val;
         k(mult2) = mult2Val;    
         k(n1idx) = n1;
-        t = linspace(0, flash_duration, flash_duration*1e6);
+        nTimepoints = flash_duration*1e6;
+        t = linspace(0, flash_duration, nTimepoints);
         Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);
+        while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
+            nTimepoints = nTimepoints*5;
+            t = linspace(0, flash_duration, nTimepoints);
+            Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);    
+            
+        end
         Sol = Sol';
         ts{end+1} = ts{end}(end) + t;
 %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t;
@@ -84,9 +93,14 @@ for train = 1:n_trains
         end
         F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol) ;
         FvFm(counter) = (max(F) - F(1))/max(F);
+        flash_O2 = Sol(O2ind,:) -Sol(O2ind,1) ;
+        O2(counter) = trapz(t, flash_O2);
         counter = counter+1;
         yinitial = Sol(:,end); %initialize the y vector for the next iteration 
         Fs{end+1} = F;
+        if any(isnan(yinitial))
+            foo = 1;
+        end
 
         %Shift to dark time between flashes
         k(mult1) = 0;
@@ -96,10 +110,30 @@ for train = 1:n_trains
         t_lims = [0,flash_interval];
         Sol = ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t_lims,yinitial);
         yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
-        ts{end+1} = ts{end}(end) + Sol.x;
-%         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+Sol.x;
-        ys{end+1} = Sol.y;
-        Fs{end+1} = [];
+
+        if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
+            nTimepoints = flash_interval*1e3;
+            t = linspace(0, flash_interval, nTimepoints); 
+            Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);    
+            while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
+                nTimepoints = nTimepoints*5;
+                t = linspace(0, flash_interval, nTimepoints);
+                Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);    
+            end
+            Sol = Sol';
+            ts{end+1} = ts{end}(end) + t;
+            %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t;
+            ys{end+1} = Sol;
+            Fs{end+1} = [];
+            yinitial = Sol(:,end);
+        else
+            ts{end+1} = ts{end}(end) + Sol.x;
+            %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+Sol.x;
+            ys{end+1} = Sol.y;
+            Fs{end+1} = [];
+            yinitial = Sol.y(:,end);
+        end
+%         O2(counter-1) = O2(counter-1)+trapz(Sol.x, Sol.y(O2ind,:));
         if length(ts{end}) ~= size(ys{end},2)
             foo = 1;
         end
@@ -110,26 +144,50 @@ for train = 1:n_trains
     t = linspace(0, train_interval, train_interval*1e5);
     Sol = ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);
 %     ts{end+1} = Sol.x;
-    ys{end+1} = Sol.y;
-    ts{end+1} = ts{end}(end) + Sol.x;
-%     ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+Sol.x; %save the times used
-    Fs{end+1} = [];
-    if length(ts{end}) ~= size(ys{end},2)
-            foo = 1;
-    end
+        if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
+                nTimepoints = train_interval*1e3;
+                t = linspace(0, train_interval, nTimepoints);
+                Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);    
+                while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
+                    nTimepoints = nTimepoints*5;
+                    t = linspace(0, train_interval, nTimepoints);
+                    Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);
+                end
+            Sol = Sol';
+            ts{end+1} = ts{end}(end) + t;
+            %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t;
+            ys{end+1} = Sol;
+            Fs{end+1} = [];
+            yinitial = Sol(:,end);
+        else
+            ts{end+1} = ts{end}(end) + Sol.x;
+            %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+Sol.x;
+            ys{end+1} = Sol.y;
+            Fs{end+1} = [];
+            yinitial = Sol.y(:,end);
+        end
+%     if length(ts{end}) ~= size(ys{end},2)
+%             foo = 1;
+%     end
 %     ys{end+1} = Sol.y; %calculate the species evolution during the dark between flashes
 %     Fs{end+1} = []; % save an empty vector for fluorescence (to allign the values of times and fluorescence)
-    yinitial = Sol.y(:,end); %initialize the y vector for the next iteration    
+     %initialize the y vector for the next iteration    
 end
+disp('Computations Complete. Plotting ...')
 figure;plot(1:length(FvFm), FvFm, '.-')
+ylabel('Flash FqFm')
+yyaxis right;
+plot(1:length(O2), O2, '.-')
+ylabel('Flash O_2 yield')
+xlabel('STF #')
 plot_pq_redox_state(species, ys, ts);
 plot_S_states(species, ys, ts);
 plot_fd_redox_state(species, ys, ts);
 plot_pc_redox_state(species, ys, ts);
 plot_NAD_redox_state(species, ys, ts);
-plot_H_species(species, ys, ts);
-% plot_atp_species(species, ys, ts);
-plot_H_species_ATPSYN(species, ys, ts)
+% plot_H_species(species, ys, ts);
+plot_atp_species(species, ys, ts);
+plot_H_species_ATPSYN(species, ys, ts);
 
 fm = reshape(FvFm,50,[]);
 a = mean(fm,1);
