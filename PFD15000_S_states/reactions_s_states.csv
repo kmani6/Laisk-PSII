@@ -1,0 +1,247 @@
+new_reactions1,new_reactions2
+S0YoPoAo + PQ -> S0YoPoAoBoo,oqr
+S1YoPoAo + PQ -> S1YoPoAoBoo,oqr
+S2YoPoAo + PQ -> S2YoPoAoBoo,oqr
+S3YoPoAo + PQ -> S3YoPoAoBoo,oqr
+S0YoPoAoBoo -> S0YoPoAo + PQ,oqd
+S1YoPoAoBoo -> S1YoPoAo + PQ,oqd
+S2YoPoAoBoo -> S2YoPoAo + PQ,oqd
+S3YoPoAoBoo -> S3YoPoAo + PQ,oqd
+S0YoPoAo + PQH2 -> S0YoPoAoBrr,rqr
+S1YoPoAo + PQH2 -> S1YoPoAoBrr,rqr
+S2YoPoAo + PQH2 -> S2YoPoAoBrr,rqr
+S3YoPoAo + PQH2 -> S3YoPoAoBrr,rqr
+S0YoPrAoBrr -> S0YoPrAo + PQH2,rqd
+S1YoPrAoBrr -> S1YoPrAo + PQH2,rqd
+S2YoPrAoBrr -> S2YoPrAo + PQH2,rqd
+S3YoPrAoBrr -> S3YoPrAo + PQH2,rqd
+S0YoPoAo -> S1YoPrAo + Hl,jd01
+S1YoPoAo -> S2YoPrAo,jd12
+S2YoPoAo -> S3YoPrAo + Hl,jd23
+S3YoPoAo -> S0YoPrAo + O2 + 2 Hl,jd30
+S0YoPoAoBoo -> S1YoPrAoBoo + Hl,jd01
+S1YoPoAoBoo -> S2YoPrAoBoo,jd12
+S2YoPoAoBoo -> S3YoPrAoBoo + Hl,jd23
+S3YoPoAoBoo -> S0YoPrAoBoo + O2 + 2 Hl,jd30
+S0YoPoArBrr -> S0YoPoAr + PQH2,rqd
+S1YoPoArBrr -> S1YoPoAr + PQH2,rqd
+S2YoPoArBrr -> S2YoPoAr + PQH2,rqd
+S3YoPoArBrr -> S3YoPoAr + PQH2,rqd
+S0YoPrAoBoo -> S0YoPrAo + PQ,oqd
+S1YoPrAoBoo -> S1YoPrAo + PQ,oqd
+S2YoPrAoBoo -> S2YoPrAo + PQ,oqd
+S3YoPrAoBoo -> S3YoPrAo + PQ,oqd
+S0YoPrAo + PQ -> S0YoPrAoBoo,oqr
+S1YoPrAo + PQ -> S1YoPrAoBoo,oqr
+S2YoPrAo + PQ -> S2YoPrAoBoo,oqr
+S3YoPrAo + PQ -> S3YoPrAoBoo,oqr
+S0YoPoAr -> S1YoPrAr + Hl,jd01
+S1YoPoAr -> S2YoPrAr,jd12
+S2YoPoAr -> S3YoPrAr + Hl,jd23
+S3YoPoAr -> S0YoPrAr + O2 + 2 Hl,jd30
+S0YoPrAo -> S0YoPoAr,n2*kp/(1+kp+kn+kr)
+S1YoPrAo -> S1YoPoAr,n2*kp/(1+kp+kn+kr)
+S2YoPrAo -> S2YoPoAr,n2*kp/(1+kp+kn+kr)
+S3YoPrAo -> S3YoPoAr,n2*kp/(1+kp+kn+kr)
+S0YoPoArBrr -> S0YoPoAr + PQH2,rqd
+S1YoPoArBrr -> S1YoPoAr + PQH2,rqd
+S2YoPoArBrr -> S2YoPoAr + PQH2,rqd
+S3YoPoArBrr -> S3YoPoAr + PQH2,rqd
+S0YoPoAoBrr -> S0YoPoAo + PQH2,rqd
+S1YoPoAoBrr -> S1YoPoAo + PQH2,rqd
+S2YoPoAoBrr -> S2YoPoAo + PQH2,rqd
+S3YoPoAoBrr -> S3YoPoAo + PQH2,rqd
+S0YoPrAoBoo -> S1YrPrAoBoo + Hl,jd01
+S1YoPrAoBoo -> S2YrPrAoBoo,jd12
+S2YoPrAoBoo -> S3YrPrAoBoo + Hl,jd23
+S3YoPrAoBoo -> S0YrPrAoBoo + O2 + 2 Hl,jd30
+S0YoPoArBoo -> S1YoPrArBoo + Hl,jd01
+S1YoPoArBoo -> S2YoPrArBoo,jd12
+S2YoPoArBoo -> S3YoPrArBoo + Hl,jd23
+S3YoPoArBoo -> S0YoPrArBoo + O2 + 2 Hl,jd30
+S0YoPrAoBoo -> S0YoPoArBoo,n2*kp/(1+kp+kn+kr)
+S1YoPrAoBoo -> S1YoPoArBoo,n2*kp/(1+kp+kn+kr)
+S2YoPrAoBoo -> S2YoPoArBoo,n2*kp/(1+kp+kn+kr)
+S3YoPrAoBoo -> S3YoPoArBoo,n2*kp/(1+kp+kn+kr)
+S0YoPoAr + PQ -> S0YoPoArBoo,oqr
+S1YoPoAr + PQ -> S1YoPoArBoo,oqr
+S2YoPoAr + PQ -> S2YoPoArBoo,oqr
+S3YoPoAr + PQ -> S3YoPoArBoo,oqr
+S0YoPoArBoo -> S0YoPrAo + PQ,oqd
+S1YoPoArBoo -> S1YoPrAo + PQ,oqd
+S2YoPoArBoo -> S2YoPrAo + PQ,oqd
+S3YoPoArBoo -> S3YoPrAo + PQ,oqd
+S0YoPoArBoo -> S0YoPoAoBro,b1d
+S1YoPoArBoo -> S1YoPoAoBro,b1d
+S2YoPoArBoo -> S2YoPoAoBro,b1d
+S3YoPoArBoo -> S3YoPoAoBro,b1d
+S0YoPoAoBro -> S0YoPoArBoo,b1r
+S1YoPoAoBro -> S1YoPoArBoo,b1r
+S2YoPoAoBro -> S2YoPoArBoo,b1r
+S3YoPoAoBro -> S3YoPoArBoo,b1r
+S0YoPoAoBro -> S1YoPrAoBro + Hl,jd01
+S1YoPoAoBro -> S2YoPrAoBro,jd12
+S2YoPoAoBro -> S3YoPrAoBro + Hl,jd23
+S3YoPoAoBro -> S0YoPrAoBro + O2 + 2 Hl,jd30
+S0YoPrAo + PQH2 -> S0YoPrAoBrr,rqr
+S1YoPrAo + PQH2 -> S1YoPrAoBrr,rqr
+S2YoPrAo + PQH2 -> S2YoPrAoBrr,rqr
+S3YoPrAo + PQH2 -> S3YoPrAoBrr,rqr
+S0YoPrAo -> S1YrPrAo + Hl,jd01
+S1YoPrAo -> S2YrPrAo,jd12
+S2YoPrAo -> S3YrPrAo + Hl,jd23
+S3YoPrAo -> S0YrPrAo + O2 + 2 Hl,jd30
+S0YrPrAoBrr -> S0YrPrAo + PQH2,rqd
+S1YrPrAoBrr -> S1YrPrAo + PQH2,rqd
+S2YrPrAoBrr -> S2YrPrAo + PQH2,rqd
+S3YrPrAoBrr -> S3YrPrAo + PQH2,rqd
+S0YrPrAoBoo -> S0YrPrAo + PQ,oqd
+S1YrPrAoBoo -> S1YrPrAo + PQ,oqd
+S2YrPrAoBoo -> S2YrPrAo + PQ,oqd
+S3YrPrAoBoo -> S3YrPrAo + PQ,oqd
+S0YoPrAr -> S1YrPrAr + Hl,jd01
+S1YoPrAr -> S2YrPrAr,jd12
+S2YoPrAr -> S3YrPrAr + Hl,jd23
+S3YoPrAr -> S0YrPrAr + O2 + 2 Hl,jd30
+S0YoPrArBrr -> S0YoPrAr + PQH2,rqd
+S1YoPrArBrr -> S1YoPrAr + PQH2,rqd
+S2YoPrArBrr -> S2YoPrAr + PQH2,rqd
+S3YoPrArBrr -> S3YoPrAr + PQH2,rqd
+S0YoPrArBoo -> S0YoPrAr + PQ,oqd
+S1YoPrArBoo -> S1YoPrAr + PQ,oqd
+S2YoPrArBoo -> S2YoPrAr + PQ,oqd
+S3YoPrArBoo -> S3YoPrAr + PQ,oqd
+S0YoPrAr + PQ -> S0YoPrArBoo,oqr
+S1YoPrAr + PQ -> S1YoPrArBoo,oqr
+S2YoPrAr + PQ -> S2YoPrArBoo,oqr
+S3YoPrAr + PQ -> S3YoPrArBoo,oqr
+S0YrPrAo -> S0YoPrAr,n2*kp/(1+kp+kn)
+S1YrPrAo -> S1YoPrAr,n2*kp/(1+kp+kn)
+S2YrPrAo -> S2YoPrAr,n2*kp/(1+kp+kn)
+S3YrPrAo -> S3YoPrAr,n2*kp/(1+kp+kn)
+S0YrPrAo + PQ -> S0YrPrAoBoo,oqr
+S1YrPrAo + PQ -> S1YrPrAoBoo,oqr
+S2YrPrAo + PQ -> S2YrPrAoBoo,oqr
+S3YrPrAo + PQ -> S3YrPrAoBoo,oqr
+S0YoPrArBoo -> S0YoPrAoBro,b1d
+S1YoPrArBoo -> S1YoPrAoBro,b1d
+S2YoPrArBoo -> S2YoPrAoBro,b1d
+S3YoPrArBoo -> S3YoPrAoBro,b1d
+S0YoPrAoBro -> S0YoPrArBoo,b1r
+S1YoPrAoBro -> S1YoPrArBoo,b1r
+S2YoPrAoBro -> S2YoPrArBoo,b1r
+S3YoPrAoBro -> S3YoPrArBoo,b1r
+S0YrPrAoBoo -> S0YoPrArBoo,n2*kp/(1+kp+kn)
+S1YrPrAoBoo -> S1YoPrArBoo,n2*kp/(1+kp+kn)
+S2YrPrAoBoo -> S2YoPrArBoo,n2*kp/(1+kp+kn)
+S3YrPrAoBoo -> S3YoPrArBoo,n2*kp/(1+kp+kn)
+S0YoPrAoBro -> S1YrPrAoBro + Hl,jd01
+S1YoPrAoBro -> S2YrPrAoBro,jd12
+S2YoPrAoBro -> S3YrPrAoBro + Hl,jd23
+S3YoPrAoBro -> S0YrPrAoBro + O2 + 2 Hl,jd30
+S0YoPrAoBro -> S0YoPoArBro,n2*kp/(1+kp+kn+kr)
+S1YoPrAoBro -> S1YoPoArBro,n2*kp/(1+kp+kn+kr)
+S2YoPrAoBro -> S2YoPoArBro,n2*kp/(1+kp+kn+kr)
+S3YoPrAoBro -> S3YoPoArBro,n2*kp/(1+kp+kn+kr)
+S0YoPoArBro -> S1YoPrArBro + Hl,jd01
+S1YoPoArBro -> S2YoPrArBro,jd12
+S2YoPoArBro -> S3YoPrArBro + Hl,jd23
+S3YoPoArBro -> S0YoPrArBro + O2 + 2 Hl,jd30
+S0YoPoArBro -> S0YoPoAoBrr,b2d
+S1YoPoArBro -> S1YoPoAoBrr,b2d
+S2YoPoArBro -> S2YoPoAoBrr,b2d
+S3YoPoArBro -> S3YoPoAoBrr,b2d
+S0YoPoAoBrr -> S1YoPrAoBrr + Hl,jd01
+S1YoPoAoBrr -> S2YoPrAoBrr,jd12
+S2YoPoAoBrr -> S3YoPrAoBrr + Hl,jd23
+S3YoPoAoBrr -> S0YoPrAoBrr + O2 + 2 Hl,jd30
+S0YrPrArBrr -> S0YrPrAr + PQH2,rqd
+S1YrPrArBrr -> S1YrPrAr + PQH2,rqd
+S2YrPrArBrr -> S2YrPrAr + PQH2,rqd
+S3YrPrArBrr -> S3YrPrAr + PQH2,rqd
+S0YrPrArBoo -> S0YrPrAr + PQ,oqd
+S1YrPrArBoo -> S1YrPrAr + PQ,oqd
+S2YrPrArBoo -> S2YrPrAr + PQ,oqd
+S3YrPrArBoo -> S3YrPrAr + PQ,oqd
+S0YrPrAr + PQ -> S0YrPrArBoo,oqr
+S1YrPrAr + PQ -> S1YrPrArBoo,oqr
+S2YrPrAr + PQ -> S2YrPrArBoo,oqr
+S3YrPrAr + PQ -> S3YrPrArBoo,oqr
+S0YrPrAoBro -> S0YrPrArBoo,b1r
+S1YrPrAoBro -> S1YrPrArBoo,b1r
+S2YrPrAoBro -> S2YrPrArBoo,b1r
+S3YrPrAoBro -> S3YrPrArBoo,b1r
+S0YoPrArBoo -> S1YrPrArBoo + Hl,jd01
+S1YoPrArBoo -> S2YrPrArBoo,jd12
+S2YoPrArBoo -> S3YrPrArBoo + Hl,jd23
+S3YoPrArBoo -> S0YrPrArBoo + O2 + 2 Hl,jd30
+S0YoPrArBro -> S1YrPrArBro + Hl,jd01
+S1YoPrArBro -> S2YrPrArBro,jd12
+S2YoPrArBro -> S3YrPrArBro + Hl,jd23
+S3YoPrArBro -> S0YrPrArBro + O2 + 2 Hl,jd30
+S0YrPrAoBro -> S0YoPrArBro,n2*kp/(1+kp+kn)
+S1YrPrAoBro -> S1YoPrArBro,n2*kp/(1+kp+kn)
+S2YrPrAoBro -> S2YoPrArBro,n2*kp/(1+kp+kn)
+S3YrPrAoBro -> S3YoPrArBro,n2*kp/(1+kp+kn)
+S0YoPrArBro -> S0YoPrAoBrr,b2d
+S1YoPrArBro -> S1YoPrAoBrr,b2d
+S2YoPrArBro -> S2YoPrAoBrr,b2d
+S3YoPrArBro -> S3YoPrAoBrr,b2d
+S0YoPrAoBrr -> S1YrPrAoBrr + Hl,jd01
+S1YoPrAoBrr -> S2YrPrAoBrr,jd12
+S2YoPrAoBrr -> S3YrPrAoBrr + Hl,jd23
+S3YoPrAoBrr -> S0YrPrAoBrr + O2 + 2 Hl,jd30
+S0YoPrAoBrr -> S0YoPrAo + PQH2,rqd
+S1YoPrAoBrr -> S1YoPrAo + PQH2,rqd
+S2YoPrAoBrr -> S2YoPrAo + PQH2,rqd
+S3YoPrAoBrr -> S3YoPrAo + PQH2,rqd
+S0YoPrAoBrr -> S0YoPoArBrr,n2*kp/(1+kp+kn+kr)
+S1YoPrAoBrr -> S1YoPoArBrr,n2*kp/(1+kp+kn+kr)
+S2YoPrAoBrr -> S2YoPoArBrr,n2*kp/(1+kp+kn+kr)
+S3YoPrAoBrr -> S3YoPoArBrr,n2*kp/(1+kp+kn+kr)
+S0YrPrArBoo -> S0YrPrAoBro,b1d
+S1YrPrArBoo -> S1YrPrAoBro,b1d
+S2YrPrArBoo -> S2YrPrAoBro,b1d
+S3YrPrArBoo -> S3YrPrAoBro,b1d
+S0YoPoArBrr -> S1YoPrArBrr + Hl,jd01
+S1YoPoArBrr -> S2YoPrArBrr,jd12
+S2YoPoArBrr -> S3YoPrArBrr + Hl,jd23
+S3YoPoArBrr -> S0YoPrArBrr + O2 + 2 Hl,jd30
+S0YoPoAr + PQH2 -> S0YoPoArBrr,rqr
+S1YoPoAr + PQH2 -> S1YoPoArBrr,rqr
+S2YoPoAr + PQH2 -> S2YoPoArBrr,rqr
+S3YoPoAr + PQH2 -> S3YoPoArBrr,rqr
+S0YrPrArBro -> S0YrPrAoBrr,b2d
+S1YrPrArBro -> S1YrPrAoBrr,b2d
+S2YrPrArBro -> S2YrPrAoBrr,b2d
+S3YrPrArBro -> S3YrPrAoBrr,b2d
+S0YrPrAoBrr -> S0YoPrArBrr,n2*kp/(1+kp+kn)
+S1YrPrAoBrr -> S1YoPrArBrr,n2*kp/(1+kp+kn)
+S2YrPrAoBrr -> S2YoPrArBrr,n2*kp/(1+kp+kn)
+S3YrPrAoBrr -> S3YoPrArBrr,n2*kp/(1+kp+kn)
+S0YrPrAo + PQH2 -> S0YrPrAoBrr,rqr
+S1YrPrAo + PQH2 -> S1YrPrAoBrr,rqr
+S2YrPrAo + PQH2 -> S2YrPrAoBrr,rqr
+S3YrPrAo + PQH2 -> S3YrPrAoBrr,rqr
+S0YoPrArBrr -> S1YrPrArBrr + Hl,jd01
+S1YoPrArBrr -> S2YrPrArBrr,jd12
+S2YoPrArBrr -> S3YrPrArBrr + Hl,jd23
+S3YoPrArBrr -> S0YrPrArBrr + O2 + 2 Hl,jd30
+S0YoPrAr + PQH2 -> S0YoPrArBrr,rqr
+S1YoPrAr + PQH2 -> S1YoPrArBrr,rqr
+S2YoPrAr + PQH2 -> S2YoPrArBrr,rqr
+S3YoPrAr + PQH2 -> S3YoPrArBrr,rqr
+S0YrPrAr + PQH2 -> S0YrPrArBrr,rqr
+S1YrPrAr + PQH2 -> S1YrPrArBrr,rqr
+S2YrPrAr + PQH2 -> S2YrPrArBrr,rqr
+S3YrPrAr + PQH2 -> S3YrPrArBrr,rqr
+PCo + P700r -> PCr + P700o,kpc/kEpc
+Cytfr + PCo -> PCr + Cytfo,kcytf
+PCr + Cytfo -> Cytfr + PCo,kcytf/kEcytf
+PCr + P700o -> P700r + PCo ,kpc
+FXo + P700r -> FXr + P700o,n1
+FXo + FDr -> FXr + FDo,kfx/kEfx
+FXr + FDo -> FDr + FXo,kfx
+FDr -> FDo ,kfd
+PQH2 + 2 Cytfo -> 2 Cytfr + PQ,kb6f
+2 Cytfr + PQ -> 2 Cytfo + PQH2,kb6f/kEb6f

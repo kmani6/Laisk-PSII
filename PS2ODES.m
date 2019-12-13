@@ -1,4 +1,4 @@
-function dydt = PS2ODES(y,krxn,k,rate_inds,S,Ynames,knames)
+function dydt = PS2ODES(t,y,krxn,k,rate_inds,S,Rknames,species)
 
 nrxn = length(rate_inds);
 
@@ -10,8 +10,8 @@ end
 
 dydt = S*r;
 
-dFl = 0;% dLaiskFluorescence(Ynames,knames,k,y);
-dydt(end+1) = dFl;
+% dFl = 0;% dLaiskFluorescence(Ynames,knames,k,y);
+% dydt(end+1) = dFl;
 
 end
 

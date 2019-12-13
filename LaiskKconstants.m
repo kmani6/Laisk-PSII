@@ -7,6 +7,11 @@ file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);
 
 jd = find(strcmp(knames,'jd')); 
+jd01 = find(strcmp(knames,'jd01')); 
+jd12 = find(strcmp(knames,'jd12')); 
+jd23 = find(strcmp(knames,'jd23')); 
+jd30 = find(strcmp(knames,'jd30'));
+delta = find(strcmp(knames,'delta'));
 oqd = find(strcmp(knames,'oqd'));
 rqr = find(strcmp(knames,'rqr'));
 rqd = find(strcmp(knames,'rqd'));
@@ -26,13 +31,21 @@ n1 = find(strcmp(knames, 'n1'));
 kfx = find(strcmp(knames,'kfx'));
 kfd = find(strcmp(knames,'kfd'));
 kb6f = find(strcmp(knames,'kb6f'));
-
+katp = find(strcmp(knames,'katp'));
+kccb = find(strcmp(knames,'kccb'));
+kcyc1 = find(strcmp(knames,'kcyc1'));
+kHleak = find(strcmp(knames,'kHleak'));
 N = length(Rknames);
 kconst = zeros(N,1);
  
 rqd1 = find(strcmp(Rknames(:,2),'rqd'));
 rqr1 = find(strcmp(Rknames(:,2),'rqr')); 
 jd1 = find(strcmp(Rknames(:,2),'jd')); 
+jd011 = find(strcmp(Rknames(:,2),'jd01')); 
+jd121 = find(strcmp(Rknames(:,2),'jd12')); 
+jd231 = find(strcmp(Rknames(:,2),'jd23')); 
+jd301 = find(strcmp(Rknames(:,2),'jd30')); 
+delta1 = find(strcmp(Rknames(:,2), 'delta'));
 oqd1 = find(strcmp(Rknames(:,2),'oqd')); 
 oqr1 = find(strcmp(Rknames(:,2),'oqr'));
 b1d1 = find(strcmp(Rknames(:,2),'b1d')); 
@@ -50,7 +63,10 @@ N1 = find(strcmp(Rknames(:,2),'n1'));
 kfx1 = find(strcmp(Rknames(:,2),'kfx'));
 kfd1 = find(strcmp(Rknames(:,2),'kfd'));
 kb6f1 = find(strcmp(Rknames(:,2),'kb6f'));
-
+katp1 = find(strcmp(Rknames(:,2),'katp'));
+kccb1 = find(strcmp(Rknames(:,2),'kccb'));
+kcyc11 = find(strcmp(Rknames(:,2),'kcyc1'));
+kHleak1 = find(strcmp(Rknames(:,2),'kHleak'));
 % mult = find(all(isnan(x),2))
 
 kconst(jd1) = jd;
@@ -73,5 +89,14 @@ kconst(N1) = n1;
 kconst(kfx1) = kfx;
 kconst(kfd1) = kfd;
 kconst(kb6f1) = kb6f; 
+kconst(kccb1) = kccb;
+kconst(katp1) = katp;
+kconst(kcyc11) = kcyc1;
+kconst(kHleak1) = kHleak;
+kconst(jd011) = jd01;
+kconst(jd121) = jd12;
+kconst(jd231) = jd23;
+kconst(jd301) = jd30;
+kconst(delta1) = delta;
 
 end
