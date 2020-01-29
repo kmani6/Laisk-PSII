@@ -5,13 +5,18 @@ hl = strcmp(species,'Hl');
 
 f = figure;
 hold on
+t = [];
+HS = [];
+HL = [];
 for itime = 2:length(ys)
-    HS = ys{itime}(hs,:);
-    HL = ys{itime}(hl,:);
-    plot(ts{itime}, HL,'b')
-    plot(ts{itime}, HS,'k')
+    t = [t, ts{itime}];
+    
+    HS = [HS, ys{itime}(hs,:)];
+    HL = [HL, ys{itime}(hl,:)];
     
 end
+plot(t, HL,'b')
+plot(t, HS,'k')
 legend({'H_{lumen}', 'H_{stroma}'})
 title('Proton concentrations')
 ylabel('H+ concentration')

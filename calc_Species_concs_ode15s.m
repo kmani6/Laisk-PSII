@@ -1,4 +1,4 @@
-function [ts,ys, Fs, FvFm, O2, O2_light, O2_dark] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
+function [ts,ys, Fs, FvFm, O2, O2_light, O2_dark] = calc_Species_concs_ode15s(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... indeces used to calculate fluorescence
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
@@ -60,7 +60,7 @@ O2ind = find(strcmp(species, 'O2'));
 k(mult1) = 0;
 k(mult2) = 0;    
 k(n1idx) = 0;
-dark_adaptation_time = .1; %3-5 minutes typically
+dark_adaptation_time = 1; %3-5 minutes typically
 t_lims = [0,dark_adaptation_time];
 Sol =  ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t_lims,yinitial);
 ts{end+1} = -dark_adaptation_time+Sol.x;
@@ -78,30 +78,29 @@ for train = 1:n_trains
         k(mult2) = mult2Val;    
         k(n1idx) = n1;
         nTimepoints = flash_duration*1e8;
-        t = linspace(0, flash_duration, nTimepoints);
-        Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);
-        while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
+        t = [0, flash_duration];
+        Sol = ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);
+        while any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
             nTimepoints = nTimepoints*5;
             t = linspace(0, flash_duration, nTimepoints);
             Sol = ode2(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t,yinitial);    
             
         end
-        Sol = Sol';
-        ts{end+1} = ts{end}(end) + t;
+        ts{end+1} = ts{end}(end) + Sol.x;
 %         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t;
-        ys{end+1} = Sol;
+        ys{end+1} = Sol.y;
 
         if length(ts{end}) ~= size(ys{end},2)
             foo = 1;
         end
-        F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol) ;
+        F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol.y) ;
         F1 = F;
-        t1 = t;
+        t1 = Sol.x;
         FvFm(counter) = (max(F) - F(1))/max(F);
-        flash_O2 = Sol(O2ind,:) -Sol(O2ind,1) ;
-        O2(counter) = trapz(t, flash_O2);
-        O2_light(counter) = trapz(t, flash_O2);
-        yinitial = Sol(:,end); %initialize the y vector for the next iteration 
+        flash_O2 = Sol.y(O2ind,:) -Sol.y(O2ind,1) ;
+        O2(counter) = trapz(Sol.x, flash_O2);
+        O2_light(counter) = trapz(Sol.x, flash_O2);
+        yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
         Fs{end+1} = F;
         if any(isnan(yinitial))
             foo = 1;
@@ -207,70 +206,78 @@ Tk = removevars(tablek, {'lb', 'ub', 'independent'});
 titles = {};
 
 
-
 figure;
-plot(1:length(FvFm), FvFm, '.-')
-ylabel('Flash FqFm')
-xlabel('STF #')
-title('FvFm oscillations')
-titles{end+1} = 'FvFm_oscillations';
+semilogx(t1,F1)
+ylabel('Fluorescence')
+xlabel('time')
+titles{end+1} = 'Fluorescence';
 
-figure;
-plot(1:length(O2), O2, '.-')
-ylabel('Flash O_2 yield')
-xlabel('STF #')
-title('O_2 oscillations')
-titles{end+1} = 'O2_oscillations';
+% 
+% figure;
+% plot(1:length(FvFm), FvFm, '.-')
+% ylabel('Flash FqFm')
+% xlabel('STF #')
+% title('FvFm oscillations')
+% titles{end+1} = 'FvFm_oscillations';
+% 
+% figure;
+% plot(1:length(O2), O2, '.-')
+% ylabel('Flash O_2 yield')
+% xlabel('STF #')
+% title('O_2 oscillations')
+% titles{end+1} = 'O2_oscillations';
+% 
+% figure;
+% plot(1:length(FvFm), FvFm, '.-')
+% ylabel('Flash FqFm')
+% yyaxis right
+% plot(1:length(O2), O2, '.-')
+% ylabel('Flash O_2 yield')
+% xlabel('STF #')
+% title('Combined FvFm and O2 oscillations')
+% titles{end+1} = 'FvFm_O2_oscillations';
 
-figure;
-plot(1:length(FvFm), FvFm, '.-')
-ylabel('Flash FqFm')
-yyaxis right
-plot(1:length(O2), O2, '.-')
-ylabel('Flash O_2 yield')
-xlabel('STF #')
-title('Combined FvFm and O2 oscillations')
-titles{end+1} = 'FvFm_O2_oscillations';
 
-
-plot_S_states(species, ys, ts);
-titles{end+1} = 'S_states';
+% plot_S_states(species, ys, ts);
+% titles{end+1} = 'S_states';
 plot_pq_redox_state(species, ys, ts);
 titles{end+1} = 'PQ';
+plot_cyt_redox_state(species, ys, ts);
+titles{end+1} = 'Cyt';
 plot_pc_redox_state(species, ys, ts);
 titles{end+1} = 'PC';
 plot_P700_redox_state(species, ys, ts);
 titles{end+1} = 'P700';
-plot_cyt_redox_state(species, ys, ts);
-titles{end+1} = 'Cyt';
 plot_fd_redox_state(species, ys, ts);
 titles{end+1} = 'Fd';
-plot_H_species(species, ys, ts);
-titles{end+1} = 'H_species';
+% plot_H_species(species, ys, ts);
+% titles{end+1} = 'H_species';
 plot_NAD_redox_state(species, ys, ts);
 titles{end+1} = 'NADP';
 plot_atp_species(species, ys, ts);
 titles{end+1} = 'ADP_phospho';
 titles{end+1} = 'ADP_ATP';
-plot_H_species_ATPSYN(species, ys, ts);
-titles{end+1} = 'H_species_ATP_SYN';
-plot_H2O_species(species, ys, ts)
-titles{end+1} = 'water_species';
-plot_buffer_species(species, ys, ts)
-titles{end+1} = 'buffer_species';
-plot_OH_species(species, ys, ts)
-titles{end+1} = 'OH_species';
+% plot_H_species_ATPSYN(species, ys, ts);
+% titles{end+1} = 'H_species_ATP_SYN';
+% plot_H2O_species(species, ys, ts)
+% titles{end+1} = 'water_species';
+% plot_buffer_species(species, ys, ts)
+% titles{end+1} = 'buffer_species';
+% plot_OH_species(species, ys, ts)
+% titles{end+1} = 'OH_species';
 % plot_Fl(Fs, ts);
 fm = reshape(FvFm,n_flashes,[]);
 a = mean(fm,1);
-figure; plot(1:length(a), a,'.-')
-ylabel('Average Fq/Fm per train')
-xlabel('train number')
-titles{end+1} = 'Avg_FvFm';
+% figure; plot(1:length(a), a,'.-')
+% ylabel('Average Fq/Fm per train')
+% xlabel('train number')
+% titles{end+1} = 'Avg_FvFm';
 
 
 figure;
 plot(t1,F1);
+ylabel('Fluorescence')
+xlabel('time')
 titles{end+1} = 'First_Flash_Fluorescence';
 
 h = get(0,'children');

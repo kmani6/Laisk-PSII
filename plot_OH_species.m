@@ -1,8 +1,5 @@
-function f = plot_H_species_ATPSYN(species, ys, ts) % model specific variables)
-species_to_graph = {'Hs','Hl','ASYNopenuuu','ASYNHauuu',...
-    'ASYNHbcuu','ASYNopencuu','ASYNHacuu',...
-    'ASYNHbccu','ASYNopenccu','ASYNHaccu',...
-    'ASYNHbccc','ASYNopenccc', 'Ha', 'Hb'};
+function f = plot_OH_species(species, ys, ts) % model specific variables)
+species_to_graph = {'OHs','OHl'};
 % species_to_graph = {'Hs','Hl','Ha', 'Hb', 'ASYNHauuu',...
 %                     'ASYNHbcuu','ASYNHacuu',...
 %                     'ASYNHbccu','ASYNHaccu',...
@@ -19,13 +16,13 @@ hold on
 t = [];
 Y = [];
 for itime = 2:length(ys)
-        t = [t, ts{itime}];
-        Y = [Y, ys{itime}(idcs,:)];
+    t = [t, ts{itime}];
+    Y = [Y, ys{itime}(idcs,:)];
 end
 plot(t, Y)
 legend(species_to_graph)
-title('Proton concentrations')
-ylabel('H+ concentration')
+title('OH species')
+ylabel('OH concentration')
 xlabel('time')
 
 

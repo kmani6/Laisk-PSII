@@ -5,11 +5,15 @@ fdr = strcmp(species,'FDr');
 
 f = figure;
 hold on
+t = [];
+Y = [];
 for itime = 2:length(ys)
     FDo = ys{itime}(fdo,:);
     FDr = ys{itime}(fdr,:);
-    plot(ts{itime}, FDr./(FDo+FDr),'b')
+    t= [t,ts{itime}];
+    Y = [Y, FDr./(FDo+FDr)];
 end
+plot(t,Y);
 title('Fd pool redox state')
 ylabel('reduced Fd fraction')
 xlabel('time')

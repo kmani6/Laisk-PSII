@@ -4,12 +4,17 @@ pq = strcmp(species,'PQ');
 pqh2 = strcmp(species,'PQH2');
 
 f = figure;
-hold on
+t = [];
+PQ = [];
+PQH2 = [];
+
 for itime = 2:length(ys)
-    PQ = ys{itime}(pq,:);
-    PQH2 = ys{itime}(pqh2,:);
-    plot(ts{itime}, PQH2./(PQ+PQH2),'b')
+    PQ = [PQ, ys{itime}(pq,:)];
+    PQH2 = [PQH2, ys{itime}(pqh2,:)];
+    t = [t, ts{itime}];
 end
+plot(t, PQH2./(PQ+PQH2))
+
 title('PQ pool redox state')
 ylabel('reduced PQ fraction')
 xlabel('time')

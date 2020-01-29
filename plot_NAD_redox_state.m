@@ -5,12 +5,17 @@ nadph = strcmp(species,'NADPH');
 
 f = figure;
 hold on
+NAD = [];
+NADH = [];
+t = [];
 for itime = 2:length(ys)
-    NAD = ys{itime}(nadp,:);
-    NADH = ys{itime}(nadph,:);
-    plot(ts{itime}, NADH./(NAD+NADH),'b')
+    t = [t, ts{itime}];
+    NAD = [NAD, ys{itime}(nadp,:)];
+    NADH = [NADH, ys{itime}(nadph,:)];
 end
-title('NADH pool redox state')
+plot(t, NADH./(NAD+NADH),'b')
+
+title('NADPH pool redox state')
 ylabel('reduced NAD fraction')
 xlabel('time')
     

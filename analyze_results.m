@@ -1,68 +1,86 @@
-function [ts,ys, Fs, FvFm, species, O2] = main_FvFm(analysis_name,randomseed)
+function [ts,ys, Fs, FvFm, species] = analyze_results(analysis_name,result_name)
 
+% 
+% if nargin == 1
+%     randomseed = 'shuffle';
+%     
+% else
+%     rng(randomseed);
+% end
 
-if nargin == 1
-    randomseed = 'shuffle';
-    
-else
-    rng(randomseed);
-end
-
-rng(randomseed);
 file1 = [analysis_name,'/FvFm_exp.csv'];
 C = readtable(file1);
 FvFm_exp = C.FqFm;
+result_path = ['results\' analysis_name '\' result_name ];
+load(result_path, 'FvFm_exp')
+load(result_path, 'flash_duration')
+load(result_path, 'flash_interval')
+load(result_path, 'train_interval')
+load(result_path, 'n_trains')
+load(result_path, 'n_flashes')
+load(result_path, 'tabley')
+load(result_path, 'tablek')
+load(result_path, 'kconst')
+load(result_path, 'kidcs')
+load(result_path, 'PSIidcs')
+load(result_path, 'species')
+load(result_path, 'species_idcs')
+load(result_path, 'xopt')
+load(result_path, 'knames')
+load(result_path, 'Rknames')
 
 
 
 
-file1 = [analysis_name,'/experimental_parameters.xls'];
-tbl1 = readtable(file1);
-n_flashes = tbl1.n_flashes;
-flash_duration = tbl1.flash_duration;
-flash_interval = tbl1.flash_interval;
-train_interval = tbl1.train_interval;
-n_trains = tbl1.n_trains;
+% file1 = [analysis_name,'/experimental_parameters.xls'];
+% tbl1 = readtable(file1);
+% n_flashes = tbl1.n_flashes;
+% flash_duration = tbl1.flash_duration;
+% flash_interval = tbl1.flash_interval;
+% train_interval = tbl1.train_interval;
+% n_trains = tbl1.n_trains;
 
 
-file1 = [analysis_name,'/LaiskConstants.xls'];
-tablek = readtable(file1);
+% file1 = [analysis_name,'/LaiskConstants.xls'];
+% tablek = readtable(file1);
 indepk = find(tablek.independent);
-lbk = tablek.lb(indepk);
-ubk = tablek.ub(indepk);
-knames = tablek.name;
-k_std = tablek.base_val;
+% lbk = tablek.lb(indepk);
+% ubk = tablek.ub(indepk);
+% knames = tablek.name;
+% k_std = tablek.base_val;
 
-file2 = [analysis_name,'/LaiskY.xls'];
-tabley = readtable(file2);
+% file2 = [analysis_name,'/LaiskY.xls'];
+% tabley = readtable(file2);
 indepy = find(tabley.independent);
-y_std = tabley.base_val;
-lby = tabley.lb(indepy);
-uby = tabley.ub(indepy);
+% y_std = tabley.base_val;
+% lby = tabley.lb(indepy);
+% uby = tabley.ub(indepy);
 % yr = lby + (uby-lby).*rand(length(indepy),1);
 
 % yr = yr+ yr.*rand(length(yr),1)*.5 - yr.*rand(length(yr),1)*.5;
-kr = k_std(indepk);
-yr = y_std(indepy);
-% kr = kr+ kr.*rand(length(kr),1)*.5 - kr.*rand(length(kr),1)*.5;
+% kr = k_std(indepk);
+% yr = y_std(indepy);
+% kr = lbk+ (ubk-lbk).*rand(length(indepk),1);
 
-indep_ps2 = find(contains(tabley.name(indepy), 'Y'));
-Ay = zeros(1,length(yr));
-Ay(indep_ps2) = 1;
-by = 1;
 
-Ak = zeros(1,length(indepk));
-Aeq = [Ay,Ak];
-beq = 1;
 
-x0 = [yr;kr];
+% indep_ps2 = find(contains(tabley.name(indepy), 'Y'));
+% Ay = zeros(1,length(yr));
+% Ay(indep_ps2) = 1;
+% by = 1;
+% 
+% Ak = zeros(1,length(indepk));
+% Aeq = [Ay,Ak];
+% beq = 1;
 
-lb = [reshape(lby,[],1); reshape(lbk,[],1)];
-ub = [reshape(uby,[],1); reshape(ubk,[],1)];
+x0 = xopt;
+
+% lb = [reshape(lby,[],1); reshape(lbk,[],1)];
+% ub = [reshape(uby,[],1); reshape(ubk,[],1)];
 
 Ynames = tabley.name;
-file3 = [analysis_name,'/LaiskReactions.xls'];
-[~,Rknames] = xlsread(file3);
+% file3 = [analysis_name,'/LaiskReactions.xls'];
+% [~,Rknames] = xlsread(file3);
 
 PFD = find(strcmp(knames, 'PFD')); 
 a2 = find(strcmp(knames, 'a2'));
@@ -139,29 +157,6 @@ Cytfo = find(strcmp(Ynames, 'Cytfo'));
 O2 = find(strcmp(Ynames, 'O2')); 
 Fl = find(strcmp(Ynames, 'Fl')); 
  
-% PS1T = k(a2)*k(Chl)/k(PSU2); 
-% PS2T = (1-k(a2))*(k(Chl)/k(PSU1));
-% PS2TR = (1-k(a2))*(k(Chl)/k(PSU1));
-
-% PS1T = 1; 
-% PS2T = 1;
-% n1 = k(PFD)*k(Labs)*(1-k(a2))/PS1T;
-% n2 = k(PFD)*k(Labs)*k(a2)/PS2T; 
-% y0(P700r) = PS1T/PS2T;
-% y0(FXo) = PS1T/PS2T;
-
-
-
-% 
-% k(oqr) = k(oqr);
-% k(rqr) = k(rqr);
-% k(kb6f) = k(kb6f);
-% k(kcytf) = k(kcytf);
-% k(kpc) = k(kpc);
-% k(kfx) = k(kfx);
-% k(P700T) = PS1T/PS2T; 
-% k(FXT) = PS1T/PS2T; 
-% k(kfd) = k(kfd);
 mult1 = find(strcmp(knames,'n2*kp/(1+kp+kn+kr)'));
 mult2 = find(strcmp(knames,'n2*kp/(1+kp+kn)')); 
 Div1 = find(strcmp(knames,'kpc/kEpc'));
@@ -170,22 +165,6 @@ Div3 = find(strcmp(knames,'kfx/kEfx'));
 Div4 = find(strcmp(knames,'kb6f/kEb6f'));
 n1idx = find(strcmp(knames,'n1'));
 
-% mult1Val = n2*k(kp)/(1+k(kp)+k(kn)+k(kr));
-% mult2Val = n2*k(kp)/(1+k(kp)+k(kn));
-% Div1Val = k(kpc)/k(kEpc);
-% Div2Val = k(kcytf)/k(kEcytf);
-% Div3Val = k(kfx)/k(kEfx);
-% Div4Val = k(kb6f)/k(kEb6f);
-% 
-% k(mult1) = mult1Val;
-% k(mult2) = mult2Val;
-% k(Div1) = Div1Val;
-% k(Div2) = Div2Val;
-% k(Div3) = Div3Val; 
-% k(Div4) = Div4Val;
-% k(n1idx) = n1;
-
-% idcs = struct;
 kidcs.PFD = PFD;
 kidcs.Labs = Labs;
 kidcs.a2 = a2;
@@ -222,8 +201,8 @@ for i = 1:length(Ynames)
     species_idcs(index) = i;
 end
 PSIidcs = zeros(2,1);
-PSIidcs(1) = find(strcmp(species,'P700r'));
-PSIidcs(2) = find(strcmp(species,'FXr'));
+PSIidcs(1) = find(strcmp(species,'P700o'));
+PSIidcs(2) = find(strcmp(species,'FXo'));
 
 [kconst] = LaiskKconstantsReadTable(analysis_name);
 
@@ -241,18 +220,18 @@ yrprao = find(contains(species,'YrPrAo'));
 yrprar = find(contains(species,'YrPrAr'));
 Fluorescence_y_inds = {yopoax;yoprao;yoprar;yrprao;yrprar};
 
-
-[ts,ys, Fs, FvFm, O2, O2_light, O2_dark] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
+[ts,ys, Fs, FvFm, O2] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... indeces used to calculate fluorescence
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
                     tablek, tabley,... information on the k and y variables
-                    kconst, rate_inds, S, species, knames, species_idcs, Rknames, analysis_name); % model specific variables
+                    kconst, rate_inds, S, species, knames, species_idcs, Rknames); % model specific variables
                 
-                
+figure;
+plot(1:length(FvFm_exp), FvFm_exp)
+hold on
+plot(1:length(FvFm), FvFm)
+                                
 end
-
-
-
-
-
+                
+                

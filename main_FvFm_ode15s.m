@@ -1,4 +1,4 @@
-function [ts,ys, Fs, FvFm, species, O2] = main_FvFm(analysis_name,randomseed)
+function [ts,ys, Fs, FvFm, species, O2] = main_FvFm_ode15s(analysis_name,randomseed)
 
 
 if nargin == 1
@@ -242,7 +242,7 @@ yrprar = find(contains(species,'YrPrAr'));
 Fluorescence_y_inds = {yopoax;yoprao;yoprar;yrprao;yrprar};
 
 
-[ts,ys, Fs, FvFm, O2, O2_light, O2_dark] = calc_Species_concs(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
+[ts,ys, Fs, FvFm, O2, O2_light, O2_dark] = calc_Species_concs_ode15s(x0,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... indeces used to calculate fluorescence
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables

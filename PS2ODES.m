@@ -1,9 +1,12 @@
 function dydt = PS2ODES(t,y,krxn,k,rate_inds,S,Rknames,species)
+% disp(num2str(t))
 
 nrxn = length(rate_inds);
 
 r = zeros(nrxn,1);
-
+if any(isnan(y))
+    foo = 1;
+end
 for irxn = 1:nrxn
     r(irxn,1) = krxn(irxn)*prod(y(rate_inds{irxn}));
 end

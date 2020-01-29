@@ -46,7 +46,13 @@ kr = lbk+ (ubk-lbk).*rand(length(indepk),1);
 
 
 
-indep_ps2 = find(contains(tabley.name(indepy), 'Y'));
+indep_ps2_cell = cellfun(@(x) regexp(x, regexptranslate('wildcard', 'S*Y*P*')), tabley.name(indepy), 'UniformOutput', false);
+indep_ps2 = [];
+for i = 1:length(indep_ps2_cell)
+    if ~isempty(indep_ps2_cell{i})
+        indep_ps2(end+1) = i;
+    end
+end
 Ay = zeros(1,length(yr));
 Ay(indep_ps2) = 1;
 by = 1;
@@ -201,6 +207,7 @@ yoprar = find(contains(species,'YoPrAr'));
 yrprao = find(contains(species,'YrPrAo'));
 yrprar = find(contains(species,'YrPrAr'));
 Fluorescence_y_inds = {yopoax;yoprao;yoprar;yrprao;yrprar};
+
 
 options = optimset('Display', 'iter', 'GradObj', 'off', 'Algorithm', 'interior-point',...
     'MaxFunEvals', 10000, 'PlotFcn', {@optimplotfval});

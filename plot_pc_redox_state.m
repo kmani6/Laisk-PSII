@@ -4,12 +4,15 @@ pco = strcmp(species,'PCo');
 pcr = strcmp(species,'PCr');
 
 f = figure;
-hold on
+t = [];
+PCo = [];
+PCr = [];
 for itime = 2:length(ys)
-    PCo = ys{itime}(pco,:);
-    PCr = ys{itime}(pcr,:);
-    plot(ts{itime}, PCr./(PCo+PCr),'b')
+    PCo = [PCo, ys{itime}(pco,:)];
+    PCr = [PCr, ys{itime}(pcr,:)];
+    t = [t, ts{itime}];
 end
+plot(t, PCr./(PCo+PCr),'b')
 title('PC pool redox state')
 ylabel('reduced PC fraction')
 xlabel('time')
