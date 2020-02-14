@@ -75,7 +75,7 @@ for train = 1:n_trains
         Sol = Sol';
         F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol) ;
         FvFm(counter) = (max(F) - F(1))/max(F);
-        grads(counter) = mean(abs(diff(F(end-5:end))./diff(t(end-5:end))));
+        grads(counter) = mean(abs(diff(F(end-1:end))./diff(t(end-1:end))));
         counter = counter+1;
         yinitial = Sol(:,end); %initialize the y vector for the next iteration
         %Shift to dark time between flashes
@@ -103,7 +103,8 @@ for train = 1:n_trains
     k(mult1) = 0;
     k(mult2) = 0;
     k(n1idx) = 0;
-    t = linspace(0, train_interval, train_interval*1e5);
+    t = [0,train_interval];
+    %t = linspace(0, train_interval, train_interval*1e5);
     Sol = ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,knames,species),t,yinitial);
     if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
         nTimepoints = train_interval*1e3;

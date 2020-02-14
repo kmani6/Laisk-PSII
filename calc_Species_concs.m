@@ -60,7 +60,7 @@ O2ind = find(strcmp(species, 'O2'));
 k(mult1) = 0;
 k(mult2) = 0;    
 k(n1idx) = 0;
-dark_adaptation_time = .1; %3-5 minutes typically
+dark_adaptation_time = 1; %3-5 minutes typically
 t_lims = [0,dark_adaptation_time];
 Sol =  ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,Rknames,species),t_lims,yinitial);
 ts{end+1} = -dark_adaptation_time+Sol.x;
@@ -200,16 +200,60 @@ disp('Computations Complete. Plotting ...')
 % title('Combined O_2 and FvFm oscillations')
 % 
 
-
-
 Ty = removevars(tabley, {'lb', 'ub', 'independent'});
 Tk = removevars(tablek, {'lb', 'ub', 'independent'});
 titles = {};
+% 
+% figure;
+% openfig('Fluorescence')
+% hold on 
 
+% semilogx(t1,Fluorescence_y_inds{1})
+% ylabel('Fluorescence:yopoax')
+% xlabel('time')
+% titles{end+1} = 'Fluorescence:yopoax';
+% 
+% semilogx(t1,Fluorescence_y_inds(1))
+% ylabel('Fluorescence:yoprao')
+% xlabel('time')
+% titles{end+1} = 'Fluorescence:yoprao';
+% 
+% semilogx(t1,Fluorescence_y_inds(1))
+% ylabel('Fluorescence:yoprar')
+% xlabel('time')
+% titles{end+1} = 'Fluorescence:yoprar';
+% 
+% semilogx(t1,Fluorescence_y_inds(1))
+% ylabel('Fluorescence:yrprao')
+% xlabel('time')
+% titles{end+1} = 'Fluorescence:yrprao';
+% 
+% semilogx(t1,Fluorescence_y_inds(1))
+% ylabel('Fluorescence:yrprar')
+% xlabel('time')
+% titles{end+1} = 'Fluorescence:yrprar';
 
+yopoax = find(contains(species,'YoPoA'));
+yoprao = find(contains(species,'YoPrAo'));
+yoprar = find(contains(species,'YoPrAr'));
+yrprao = find(contains(species,'YrPrAo'));
+yrprar = find(contains(species,'YrPrAr'));
+
+semilogx(t1,yopoax(1:end))
+ylabel('Fluorescence:YoPoA')
+xlabel('time')
+titles{end+1} = 'Fluorescence:YoPoA';
+
+semilogx(t1,F1)
+ylabel('Fluorescence')
+xlabel('time')
+titles{end+1} = 'Fluorescence';
 
 figure;
-plot(1:length(FvFm), FvFm, '.-')
+openfig('FvFm_oscillations')
+hold on
+plot(1:length(FvFm), FvFm,'o')
+hold off
 ylabel('Flash FqFm')
 xlabel('STF #')
 title('FvFm oscillations')
@@ -222,6 +266,8 @@ xlabel('STF #')
 title('O_2 oscillations')
 titles{end+1} = 'O2_oscillations';
 
+% openfig('Combined FvFm_O2_oscillations.fig')
+% hold on 
 figure;
 plot(1:length(FvFm), FvFm, '.-')
 ylabel('Flash FqFm')
@@ -231,7 +277,7 @@ ylabel('Flash O_2 yield')
 xlabel('STF #')
 title('Combined FvFm and O2 oscillations')
 titles{end+1} = 'FvFm_O2_oscillations';
-
+hold off 
 
 plot_S_states(species, ys, ts);
 titles{end+1} = 'S_states';
@@ -273,26 +319,26 @@ figure;
 plot(t1,F1);
 titles{end+1} = 'First_Flash_Fluorescence';
 
-h = get(0,'children');
-timestamp = datestr(now,30);
-
-if ~exist('results', 'dir')
-    mkdir('results')
-end
-if ~exist(['results/' analysis_name], 'dir')
-    mkdir('results/', analysis_name);
-end
-
-mkdir(['results/', analysis_name, '/', timestamp]);
-dirname = ['results/', analysis_name, '/', timestamp];
-
-for i=1:length(h)
-    saveas(h(i), [dirname, '/', titles{i}], 'png');
-%     saveas(h(i), [dirname, '/', titles{i}], 'fig');
-end
-
-writetable(Ty, [dirname, '/ys.csv'])
-writetable(Tk, [dirname, '/ks.csv'])
+% h = get(0,'children');
+% timestamp = datestr(now,30);
+% 
+% if ~exist('results', 'dir')
+%     mkdir('results')
+% end
+% if ~exist(['results/' analysis_name], 'dir')
+%     mkdir('results/', analysis_name);
+% end
+% 
+% mkdir(['results/', analysis_name, '/', timestamp]);
+% dirname = ['results/', analysis_name, '/', timestamp];
+% 
+% for i=1:length(h)
+%     saveas(h(i), [dirname, '/', titles{i}], 'png');
+% %     saveas(h(i), [dirname, '/', titles{i}], 'fig');
+% end
+% 
+% writetable(Ty, [dirname, '/ys.csv'])
+% writetable(Tk, [dirname, '/ks.csv'])
 end
 
 % figure; plot(1:length(FvFm), FvFm, 'o-')

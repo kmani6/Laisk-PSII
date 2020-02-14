@@ -199,47 +199,46 @@ disp('Computations Complete. Plotting ...')
 % title('Combined O_2 and FvFm oscillations')
 % 
 
-
-
 Ty = removevars(tabley, {'lb', 'ub', 'independent'});
 Tk = removevars(tablek, {'lb', 'ub', 'independent'});
 titles = {};
-
 
 figure;
 semilogx(t1,F1)
 ylabel('Fluorescence')
 xlabel('time')
 titles{end+1} = 'Fluorescence';
+savefig('Fluorescence.fig')
 
-% 
-% figure;
-% plot(1:length(FvFm), FvFm, '.-')
-% ylabel('Flash FqFm')
-% xlabel('STF #')
-% title('FvFm oscillations')
-% titles{end+1} = 'FvFm_oscillations';
-% 
-% figure;
-% plot(1:length(O2), O2, '.-')
-% ylabel('Flash O_2 yield')
-% xlabel('STF #')
-% title('O_2 oscillations')
-% titles{end+1} = 'O2_oscillations';
-% 
-% figure;
-% plot(1:length(FvFm), FvFm, '.-')
-% ylabel('Flash FqFm')
-% yyaxis right
-% plot(1:length(O2), O2, '.-')
-% ylabel('Flash O_2 yield')
-% xlabel('STF #')
-% title('Combined FvFm and O2 oscillations')
-% titles{end+1} = 'FvFm_O2_oscillations';
+figure;
+plot(1:length(FvFm), FvFm, '.-')
+ylabel('Flash FqFm')
+xlabel('STF #')
+title('FvFm oscillations')
+titles{end+1} = 'FvFm_oscillations';
+savefig('FvFm_oscillations.fig')
 
+figure;
+plot(1:length(O2), O2, '.-')
+ylabel('Flash O_2 yield')
+xlabel('STF #')
+title('O_2 oscillations')
+titles{end+1} = 'O2_oscillations';
+savefig('O2_oscillations.fig')
 
-% plot_S_states(species, ys, ts);
-% titles{end+1} = 'S_states';
+figure;
+plot(1:length(FvFm), FvFm, '.-')
+ylabel('Flash FqFm')
+yyaxis right
+plot(1:length(O2), O2, '.-')
+ylabel('Flash O_2 yield')
+xlabel('STF #')
+title('Combined FvFm and O2 oscillations')
+titles{end+1} = 'FvFm_O2_oscillations';
+savefig('Combined FvFm_O2_oscillations.fig')
+
+plot_S_states(species, ys, ts);
+titles{end+1} = 'S_states';
 plot_pq_redox_state(species, ys, ts);
 titles{end+1} = 'PQ';
 plot_cyt_redox_state(species, ys, ts);
@@ -250,28 +249,29 @@ plot_P700_redox_state(species, ys, ts);
 titles{end+1} = 'P700';
 plot_fd_redox_state(species, ys, ts);
 titles{end+1} = 'Fd';
-% plot_H_species(species, ys, ts);
-% titles{end+1} = 'H_species';
+plot_H_species(species, ys, ts);
+titles{end+1} = 'H_species';
 plot_NAD_redox_state(species, ys, ts);
 titles{end+1} = 'NADP';
 plot_atp_species(species, ys, ts);
 titles{end+1} = 'ADP_phospho';
 titles{end+1} = 'ADP_ATP';
-% plot_H_species_ATPSYN(species, ys, ts);
-% titles{end+1} = 'H_species_ATP_SYN';
-% plot_H2O_species(species, ys, ts)
-% titles{end+1} = 'water_species';
-% plot_buffer_species(species, ys, ts)
-% titles{end+1} = 'buffer_species';
-% plot_OH_species(species, ys, ts)
-% titles{end+1} = 'OH_species';
-% plot_Fl(Fs, ts);
+plot_H_species_ATPSYN(species, ys, ts);
+titles{end+1} = 'H_species_ATP_SYN';
+plot_H2O_species(species, ys, ts)
+titles{end+1} = 'water_species';
+plot_buffer_species(species, ys, ts)
+titles{end+1} = 'buffer_species';
+plot_OH_species(species, ys, ts)
+titles{end+1} = 'OH_species';
+plot_Fl(Fs, ts);
 fm = reshape(FvFm,n_flashes,[]);
 a = mean(fm,1);
-% figure; plot(1:length(a), a,'.-')
-% ylabel('Average Fq/Fm per train')
-% xlabel('train number')
-% titles{end+1} = 'Avg_FvFm';
+figure; plot(1:length(a), a,'.-')
+ylabel('Average Fq/Fm per train')
+xlabel('train number')
+titles{end+1} = 'Avg_FvFm';
+titles{end+1} = 'dsadas';
 
 
 figure;
@@ -279,6 +279,7 @@ plot(t1,F1);
 ylabel('Fluorescence')
 xlabel('time')
 titles{end+1} = 'First_Flash_Fluorescence';
+
 
 h = get(0,'children');
 timestamp = datestr(now,30);
@@ -300,6 +301,8 @@ end
 
 writetable(Ty, [dirname, '/ys.csv'])
 writetable(Tk, [dirname, '/ks.csv'])
+
+
 end
 
 % figure; plot(1:length(FvFm), FvFm, 'o-')

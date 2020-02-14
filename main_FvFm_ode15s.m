@@ -14,8 +14,6 @@ C = readtable(file1);
 FvFm_exp = C.FqFm;
 
 
-
-
 file1 = [analysis_name,'/experimental_parameters.xls'];
 tbl1 = readtable(file1);
 n_flashes = tbl1.n_flashes;
@@ -61,7 +59,7 @@ lb = [reshape(lby,[],1); reshape(lbk,[],1)];
 ub = [reshape(uby,[],1); reshape(ubk,[],1)];
 
 Ynames = tabley.name;
-file3 = [analysis_name,'/LaiskReactions.xls'];
+file3 = [analysis_name,'/LaiskReactions.xlsx'];
 [~,Rknames] = xlsread(file3);
 
 PFD = find(strcmp(knames, 'PFD')); 
@@ -248,7 +246,8 @@ Fluorescence_y_inds = {yopoax;yoprao;yoprar;yrprao;yrprar};
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
                     tablek, tabley,... information on the k and y variables
                     kconst, rate_inds, S, species, knames, species_idcs, Rknames, analysis_name); % model specific variables
-                
+
+save([analysis_name,'/result.mat'], 'ts','ys','Fs','FvFm','species','O2')
                 
 end
 
