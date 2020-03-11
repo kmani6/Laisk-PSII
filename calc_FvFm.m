@@ -20,7 +20,6 @@ k = tablek.base_val;
 k(indepk) = kr;
 
 
-
 k(kidcs.PFD) = .24;
 k(kidcs.kf) = 1;
 PS1T = k(kidcs.a2)*k(kidcs.Chl)/k(kidcs.PSU2);
@@ -28,6 +27,7 @@ PS2T = (1-k(kidcs.a2))*(k(kidcs.Chl)/k(kidcs.PSU1));
 n1 = k(kidcs.PFD)*k(kidcs.Labs)*(1-k(kidcs.a2))/PS1T;
 n2 = k(kidcs.PFD)*k(kidcs.Labs)*k(kidcs.a2)/PS2T;
 yinitial(PSIidcs) = PS1T/PS2T;
+
 
 mult1Val = n2*k(kidcs.kp)/(1+k(kidcs.kp)+k(kidcs.kn)+k(kidcs.kr));
 mult2Val = n2*k(kidcs.kp)/(1+k(kidcs.kp)+k(kidcs.kn));
@@ -52,9 +52,9 @@ n1idx = kidcs.n1idx;
 k(mult1) = 0;
 k(mult2) = 0;
 k(n1idx) = 0;
-dark_adaptation_time = 180; %3-5 minutes typically
+dark_adaptation_time = 30; %3-5 minutes typically
 t_lims = [0,dark_adaptation_time];
-Sol =  ode15s(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,knames,species),t_lims,yinitial);
+Sol =  ode45(@(t,y) PS2ODES(t,y,k(kconst),k,rate_inds,S,knames,species),t_lims,yinitial);
 yinitial = Sol.y(:,end); %initialize the y vector for the next iteration
 counter = 1;
 for train = 1:n_trains

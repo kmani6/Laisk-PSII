@@ -1,4 +1,4 @@
-function [ts,ys, Fs, FvFm, species, O2] = main_FvFm_ode15s(analysis_name,randomseed)
+function [ts,ys, Fs, FvFm, species, O2] = main_FvFm_ode15s1(analysis_name,randomseed)
 
 
 if nargin == 1

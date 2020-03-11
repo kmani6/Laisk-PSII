@@ -29,6 +29,8 @@ indepk = find(tablek.independent);
 lbk = tablek.lb(indepk);
 ubk = tablek.ub(indepk);
 knames = tablek.name;
+
+
 % k_std = tablek.base_val;
 
 file2 = [analysis_name,'/LaiskY.xls'];
@@ -221,7 +223,7 @@ sqr_initial = calc_sqerror(x0,...Set of parameters including k and yinitial
 options = optimset('Display', 'iter', 'GradObj', 'off', 'Algorithm', 'interior-point',...
     'MaxFunEvals', 10000, 'PlotFcn', {@optimplotfval});
 
-[xopt, fval, exitflag, output] = fmincon(@(x) calc_sqerror(x0,...Set of parameters including k and yinitial
+[xopt, fval, exitflag, output] = fmincon(@(x) calc_sqerror(x,...Set of parameters including k and yinitial
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... Indeces to calculate Fluorescence
                     kidcs, PSIidcs, ... all indices needed to calculate FvFm and prepare the variables

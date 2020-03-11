@@ -1,0 +1,57 @@
+function dydt = PS2ODES(t,y,krxn,k,rate_inds,S,Rknames,species,kidcs)
+% disp(num2str(t))
+
+yopoax = find(contains(species,'YoPoA'));
+yoprao = find(contains(species,'YoPrAo'));
+FT = find(contains(species,'YoPrAr'));
+FP = find(contains(species,'YrPrAo'));
+FD = find(contains(species,'YrPrAr'));
+FT = find(contains(species,'YrPrAr'));
+
+F + P -> FP
+F + ADP -> FD
+FP + ADP -> FDP
+FD + P -> FDP
+FDP + ATP -> FT + ADP
+F + ATP -> FT
+
+
+
+
+
+%Missing fFr, fF0, pmf, and VpH
+Ftotal = FD + FP + FD + FT; 
+
+fFr = F/Ftotal; 
+fFo = Ft/Ftotal; 
+
+kF = 1.1e2; 
+pmfd = 6e-2; 
+x = (1/kF)*(fFr*10^pmf/VpH + fFo*10^(pmf-pmfd)/VpH); 
+D = 1 + x + x^2 + x^3 + x^4; 
+kFC = 3.1;
+p1 = (kFC*x^4)/((1+kFC)*D); 
+p2 = 1/((1+kFC)*D'); 
+kF10 = 5.13e3;
+kF20 = 2.16e3; 
+k(kidcs.kF1) = kF10*p1; 
+k(kidcs.kF2) = kF20*p2; 
+
+nrxn = length(rate_inds);
+
+r = zeros(nrxn,1);
+if any(isnan(y))
+    foo = 1;
+end
+for irxn = 1:nrxn
+    r(irxn,1) = krxn(irxn)*prod(y(rate_inds{irxn}));
+end
+
+dydt = S*r;
+
+% dFl = 0;% dLaiskFluorescence(Ynames,knames,k,y);
+% dydt(end+1) = dFl;
+
+end
+
+

@@ -233,7 +233,7 @@ sqr_initial = calc_sqerror(x0,...Set of parameters including k and yinitial
 %                     x0, [], [], Aeq, beq, lb, ub, [], options);
 
              
-fun = @(x) calc_sqerror(x0,...Set of parameters including k and yinitial
+fun = @(x) calc_sqerror(x,...Set of parameters including k and yinitial
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... Indeces to calculate Fluorescence
                     kidcs, PSIidcs, ... all indices needed to calculate FvFm and prepare the variables
