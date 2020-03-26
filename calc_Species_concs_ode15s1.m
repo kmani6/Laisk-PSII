@@ -65,8 +65,9 @@ yinitial(yidcs.ATPaseoindex) = .63;
 yinitial(yidcs.ATPaserindex) = 0; 
 yinitial(yidcs.pH_lumenindex) = 10^-7.8;
 yinitial(yidcs.pH_stromaindex) = 10^-7.8;
+yinitial(yidcs.fRindex) = 0;
 
-Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t_lims,yinitial);
+Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
 ts{end+1} = -dark_adaptation_time+Sol.x;
 ys{end+1} = Sol.y;
 Fs{end+1} = [];
@@ -83,11 +84,11 @@ for train = 1:n_trains
         k(n1idx) = n1;
         nTimepoints = flash_duration*1e8;
         t = [0, flash_duration];
-        Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);
+        Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
         while any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
             nTimepoints = nTimepoints*5;
             t = linspace(0, flash_duration, nTimepoints);
-            Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);    
+            Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);    
             
         end
         ts{end+1} = ts{end}(end) + Sol.x;
@@ -116,17 +117,17 @@ for train = 1:n_trains
         k(n1idx) = 0;
         
         t_lims = [0,flash_interval];
-        Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t_lims,yinitial);
+        Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
 %         yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
 
         if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
             nTimepoints = flash_interval*1e3;
             t = linspace(0, flash_interval, nTimepoints); 
-            Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);    
+            Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);    
             while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
                 nTimepoints = nTimepoints*5;
                 t = linspace(0, flash_interval, nTimepoints);
-                Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);    
+                Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);    
             end
             Sol = Sol';
             ts{end+1} = ts{end}(end) + t;
@@ -153,16 +154,16 @@ for train = 1:n_trains
     k(mult2) = 0;       
     k(n1idx) = 0;
     t = linspace(0, train_interval, train_interval*1e5);
-    Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);
+    Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
 %     ts{end+1} = Sol.x;
         if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
                 nTimepoints = train_interval*1e3;
                 t = linspace(0, train_interval, nTimepoints);
-                Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);    
+                Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);    
                 while any(any(Sol<-1e-5)) || any(any(isnan(Sol)))
                     nTimepoints = nTimepoints*5;
                     t = linspace(0, train_interval, nTimepoints);
-                    Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs),t,yinitial);
+                    Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
                 end
             Sol = Sol';
             ts{end+1} = ts{end}(end) + t;

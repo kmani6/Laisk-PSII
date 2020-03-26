@@ -56,6 +56,10 @@ yinitial(pH_lumenindex) = 10^-7.8;
 pH_stromaindex = nspecies + 5;
 yidcs.pH_stromaindex = pH_stromaindex;
 yinitial(pH_stromaindex) = 10^-7.8;
+fRindex = nspecies + 6;
+yidcs.fRindex = fRindex;
+yinitial(fRindex) = 0; 
+
 % yr = yr+ yr.*rand(length(yr),1)*.5 - yr.*rand(length(yr),1)*.5;
 kx = k_std(indepk);
 yr = y_std(indepy);
@@ -240,6 +244,10 @@ FT = find(strcmp(species,'SynFT'));
 F = find(strcmp(species,'SynF'));
 Hs = find(strcmp(species,'Hs'));
 Hl = find(strcmp(species,'Hl'));
+NADPH = find(strcmp(species,'NADPH'));
+NADP = find(strcmp(species,'NADP'));
+ADP = find(strcmp(species,'ADP'));
+ATP = find(strcmp(species,'ATP'));
 
 yidcs.FDP = FDP;
 yidcs.FT = FT;
@@ -248,6 +256,10 @@ yidcs.FP = FP;
 yidcs.F = F;
 yidcs.Hs = Hs;
 yidcs.Hl = Hl; 
+yidcs.NADPH = NADPH;
+yidcs.NADP = NADP;
+yidcs.ADP = ADP;
+yidcs.ATP = ATP; 
 
 species_idcs = zeros(length(species),1);
 % yinitial = zeros(length(y0),1);
