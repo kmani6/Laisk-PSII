@@ -1,4 +1,4 @@
-function dydt = PS2ODES(t,y,krxn,k,rate_inds,S,Rknames,species)
+function dydt = PS2ODES(t,y,krxn,k,rate_inds,S,Rknames,species,kidcs)
 % disp(num2str(t))
 
 nrxn = length(rate_inds);

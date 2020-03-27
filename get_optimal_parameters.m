@@ -1,4 +1,4 @@
-function [ts,ys, Fs, FvFm, species] = get_optimal_parameters(analysis_name,randomseed)
+function [ts,ys, Fs, FvFm, species, FvFmErr, XErr] = get_optimal_parameters(analysis_name,randomseed)
 
 
 if nargin == 1
@@ -29,6 +29,8 @@ indepk = find(tablek.independent);
 lbk = tablek.lb(indepk);
 ubk = tablek.ub(indepk);
 knames = tablek.name;
+
+
 % k_std = tablek.base_val;
 
 file2 = [analysis_name,'/LaiskY.xls'];
@@ -61,13 +63,14 @@ Ak = zeros(1,length(indepk));
 Aeq = [Ay,Ak];
 beq = 1;
 
+%x0 = [10,yr;kr] 
 x0 = [yr;kr];
 
 lb = [reshape(lby,[],1); reshape(lbk,[],1)];
 ub = [reshape(uby,[],1); reshape(ubk,[],1)];
 
 Ynames = tabley.name;
-file3 = [analysis_name,'/LaiskReactions.xls'];
+file3 = [analysis_name,'/LaiskReactions.xlsx'];
 [~,Rknames] = xlsread(file3);
 
 PFD = find(strcmp(knames, 'PFD')); 
@@ -208,17 +211,27 @@ yrprao = find(contains(species,'YrPrAo'));
 yrprar = find(contains(species,'YrPrAr'));
 Fluorescence_y_inds = {yopoax;yoprao;yoprar;yrprao;yrprar};
 
+sqr_initial = calc_sqerror(x0,...Set of parameters including k and yinitial
+                    n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
+                    Fluorescence_k_idcs, Fluorescence_y_inds,... Indeces to calculate Fluorescence
+                    kidcs, PSIidcs, ... all indices needed to calculate FvFm and prepare the variables
+                    tablek, tabley,... information on the k and y variables
+                    kconst, rate_inds, S, species, knames, species_idcs,...
+                    FvFm_exp);
+                
 
 options = optimset('Display', 'iter', 'GradObj', 'off', 'Algorithm', 'interior-point',...
     'MaxFunEvals', 10000, 'PlotFcn', {@optimplotfval});
-[xopt, fval, exitflag, output] = fmincon(@(x) calc_sqerror(x,...Set of parameters including k and yinitia
+
+[xopt, fval, exitflag, output] = fmincon(@(x) calc_sqerror(x,...Set of parameters including k and yinitial
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
                     Fluorescence_k_idcs, Fluorescence_y_inds,... Indeces to calculate Fluorescence
-                    kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
+                    kidcs, PSIidcs, ... all indices needed to calculate FvFm and prepare the variables
                     tablek, tabley,... information on the k and y variables
                     kconst, rate_inds, S, species, knames, species_idcs,...
                     FvFm_exp), ...
                     x0, [], [], Aeq, beq, lb, ub, [], options);
+
                 
 FvFm_sim_opt = calc_FvFm(xopt,... Set of parameters. This only includes the independent variables as described by the third column in Y and Constants files
                     n_trains, n_flashes, flash_duration, flash_interval, train_interval, ... Experimental parameters
@@ -241,7 +254,9 @@ save(['results/', analysis_name '/optimal' datestr(now, 30)],...
                     'tablek', 'tabley', 'Rknames',... information on the k and y variables
                     'kconst', 'rate_inds', 'S', 'species', 'knames', 'species_idcs',...
                     'FvFm_exp', 'FvFm_sim_opt')
-                                
+
+[FvFmErr,XErr] = OptimizeComp(analysis_name,datestring);
+
 end
                 
                 

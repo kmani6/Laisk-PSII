@@ -14,8 +14,8 @@ try
                     kidcs, PSIidcs, ... all indices needed in to calculate FvFm and prepare the variables
                     tablek, tabley,... information on the k and y variables
                     kconst, rate_inds, S, species, knames, species_idcs); % model specific variables
-                
-sqerror = norm(FvFm_exp- FvFm_sim)^2/numel(FvFm_exp) + 1e-4* norm(grads)/numel(grads);
+                                     
+sqerror = norm(FvFm_exp-FvFm_sim)^2/numel(FvFm_exp); %+ 1e-10* norm(grads)/numel(grads);
 
 catch err
   disp(getReport(err));
