@@ -248,10 +248,13 @@ NADPH = find(strcmp(species,'NADPH'));
 NADP = find(strcmp(species,'NADP'));
 ADP = find(strcmp(species,'SynADP'));
 ATP = find(strcmp(species,'SynATP'));
+<<<<<<< HEAD
 % Hs -> Hl 	kHleak
 % ATP -> ADP 	kcbb_ATP
 % NADPH -> NADP	kcbb_NADPH
 % 9ATP + 6 NADPH -> 9 ADP + 6 NADP	kcbb
+=======
+>>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
 
 yidcs.FDP = FDP;
 yidcs.FT = FT;

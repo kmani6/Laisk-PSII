@@ -63,9 +63,15 @@ t_lims = [0,dark_adaptation_time];
 yinitial(yidcs.deltapsiindex) = 0;
 yinitial(yidcs.ATPaseoindex) = .63;
 yinitial(yidcs.ATPaserindex) = 0; 
-yinitial(yidcs.pH_lumenindex) = 10^-7.8;
-yinitial(yidcs.pH_stromaindex) = 10^-7.8;
+yinitial(yidcs.pH_lumenindex) = 7.8;
+yinitial(yidcs.pH_stromaindex) = 7.8;
 yinitial(yidcs.fRindex) = 0;
+species{end+1} = 'deltapsi';
+species{end+1} = 'ATPaseO';
+species{end+1} = 'ATPaseR';
+species{end+1} = 'pHLumen';
+species{end+1} = 'pHStroma';
+species{end+1} = 'fr';
 
 Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
 ts{end+1} = -dark_adaptation_time+Sol.x;
