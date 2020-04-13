@@ -14,7 +14,7 @@ krxn(kf1indcs) = ATPpar.kF10*p1;
 krxn(kf2indcs) = ATPpar.kF20*p2; 
 
 r = zeros(nrxn,1);
-if any(isnan(y))
+if t>.03
     foo = 1;
 end
 for irxn = 1:nrxn
@@ -39,10 +39,10 @@ fRtheta = 0.96;
 fRss = fRmin + ((fRalpha * k(kidcs.PFD) + (1 - fRmin)) - sqrt((fRalpha * k(kidcs.PFD) + (1 - fRmin))^2 - 4 * fRtheta * fRalpha * k(kidcs.PFD) * (1 - fRmin))) / (2 * fRtheta);
 kiR = 6.3e-3;
 kdR = 7.5e-3; 
-if fRss > yidcs.fRindex
-        dydt(yidcs.fRindex) = (fRss-yidcs.fRindex)*kiR;
+if fRss > y(yidcs.fRindex)
+        dydt(yidcs.fRindex) = (fRss-y(yidcs.fRindex))*kiR;
 else
-        dydt(yidcs.fRindex) = (fRss-yidcs.fRindex)*kdR;
+        dydt(yidcs.fRindex) = (fRss-y(yidcs.fRindex))*kdR;
 end 
 Vr = (PGA*y(yidcs.ATP)*yidcs.NADPH*y(yidcs.fRindex)*Vrmax)/((PGA+KmPGA)*(y(yidcs.ATP)+KmATP)*(yidcs.NADPH+KmNADPH)); 
 dydt(yidcs.ATP) = dydt(yidcs.ATP) - (3+3.5*phi)*Vr/(2+1.5*phi);
@@ -69,16 +69,24 @@ KE_ThATPase = exp((2*ATPpar.F*(Em_ATPase-Em_Th))/(ATPpar.R*ATPpar.T));
 VFr = (ATPpar.kFr/ATPpar.Stroma)*(ATPpar.Thr*y(yidcs.ATPaseoindex)-((ATPpar.Tho*y(yidcs.ATPaserindex))/(KE_ThATPase)));
 dydt(yidcs.ATPaserindex) = ATPpar.B_stroma*VFr;
 dydt(yidcs.ATPaseoindex) = -ATPpar.B_stroma*VFr;
-dydt(yidcs.pH_stromaindex) = (ATPpar.B_stroma/ATPpar.Vstroma)*dydt(yidcs.Hs);
-dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen/ATPpar.Vlumen)*dydt(yidcs.Hl); 
+dydt(yidcs.pH_stromaindex) = -(ATPpar.B_stroma)*dydt(yidcs.Hs);
+dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen)*dydt(yidcs.Hl); 
 dydt(yidcs.FT) = dydt(yidcs.FT) - (r(kf1indcs)-r(kf2indcs)) + (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
+dydt(yidcs.FDP) = dydt(yidcs.FDP) + (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
 %fFo = y(yidcs.FT)/Ftotal; 
 %fFo initial val = 0 
 if t > .0009
    foo = 1;  
 end 
+
+if any(y<-1e-10)
+    foo = 1;
+end
 if isnan(dydt)
+   foo = 1;  
+end 
+if isnan(y)
    foo = 1;  
 end 
 
