@@ -3,10 +3,10 @@ function dydt = PS2ODES1(t,y,krxn,k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1
 
 nrxn = length(rate_inds);
 fFr = (y(yidcs.ATPaserindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
-fFo = (y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
+fFo = (1-fFr); %(y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
 deltaph = y(yidcs.pH_stromaindex) - y(yidcs.pH_lumenindex); %y(yidcs.pH_lumenindex) - y(yidcs.pH_stromaindex);
 pmf = y(yidcs.deltapsiindex) + (2.3*ATPpar.R*ATPpar.T)*(deltaph)/ATPpar.F; 
-x = (1/ATPpar.kF)*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH); 
+x = (1/ATPpar.kF)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^((pmf-ATPpar.pmfd)/ATPpar.VpH)); 
 D = 1 + x + x^2 + x^3 + x^4; 
 p1 = (ATPpar.kFC*x^4)/((1+ATPpar.kFC)*D); 
 p2 = 1/((1+ATPpar.kFC)*D); 
@@ -64,20 +64,20 @@ VHout = 0; %dydt(yidcs.Hs);
 dydt(yidcs.deltapsiindex) = (((VHin-VHout)/ATPpar.Sth + Fi)*ATPpar.F)/ATPpar.Cmem; %*1e-4;
 %Ftotal = y(yidcs.FDP) + y(yidcs.FP) + y(yidcs.FDP) + y(yidcs.FT); 
 
-Em_Th = ATPpar.EmATPTh_7 *ATPpar.VpH*(-log(y(yidcs.Hs)-7));
-Em_ATPase = ATPpar.EmATPase_7*ATPpar.VpH*(-log(y(yidcs.Hs)-7));
+Em_Th = ATPpar.EmATPTh_7 - ATPpar.VpH*(-log(y(yidcs.Hs)-7)); %Em_Th = ATPpar.EmATPTh_7 * ATPpar.VpH*(-log(y(yidcs.Hs)-7));
+Em_ATPase = ATPpar.EmATPase_7-ATPpar.VpH*(-log(y(yidcs.Hs)-7)); %ATPpar.EmATPase_7*ATPpar.VpH*(-log(y(yidcs.Hs)-7));
 KE_ThATPase = exp((2*ATPpar.F*(Em_ATPase-Em_Th))/(ATPpar.R*ATPpar.T));
 VFr = (ATPpar.kFr/ATPpar.Stroma)*(ATPpar.Thr*y(yidcs.ATPaseoindex)-((ATPpar.Tho*y(yidcs.ATPaserindex))/(KE_ThATPase)));
 dydt(yidcs.ATPaserindex) = ATPpar.B_stroma*VFr;
 dydt(yidcs.ATPaseoindex) = -ATPpar.B_stroma*VFr;
-<<<<<<< HEAD
+% <<<<<<< HEAD
 dydt(yidcs.pH_stromaindex) = -(ATPpar.B_stroma/ATPpar.Vstroma)*dydt(yidcs.Hs);
 dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen/ATPpar.Vlumen)*dydt(yidcs.Hl); 
 dydt(yidcs.FDP) = dydt(yidcs.FDP) - (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
-=======
+% =======
 dydt(yidcs.pH_stromaindex) = -(ATPpar.B_stroma)*dydt(yidcs.Hs);
 dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen)*dydt(yidcs.Hl); 
->>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
+% >>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
 dydt(yidcs.FT) = dydt(yidcs.FT) - (r(kf1indcs)-r(kf2indcs)) + (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 dydt(yidcs.FDP) = dydt(yidcs.FDP) + (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
@@ -87,13 +87,13 @@ if t > .0009
    foo = 1;  
 end 
 
-<<<<<<< HEAD
+% <<<<<<< HEAD
 if any (y<-1e-10)
    foo = 1;
-=======
+% =======
 if any(y<-1e-10)
     foo = 1;
->>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
+% >>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
 end
 if isnan(dydt)
    foo = 1;  

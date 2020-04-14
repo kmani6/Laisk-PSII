@@ -205,7 +205,7 @@ kpsi = 10;
 T = 298; 
 R = 8.31; 
 apmf = 3e-2;
-bpmf = 1.87; 
+bpmf = 1.866; 
 
 
 ATPpar.Thr = 0; 
@@ -222,7 +222,7 @@ ATPpar.pmfd = 6e-2;
 ATPpar.kF20 = 2.16e3; 
 ATPpar.kF10 = 5.13e3;
 ATPpar.kFC = 3.1;
-ATPpar.VpH = 59; 
+ATPpar.VpH = .059; 
 ATPpar.kF = 1.1e2; 
 ATPpar.Sth = Sth;
 ATPpar.F = F;
