@@ -5,6 +5,8 @@ nrxn = length(rate_inds);
 fFr = (y(yidcs.ATPaserindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
 fFo = 1-fFr;%(y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
 deltaph = -y(yidcs.pH_lumenindex) + y(yidcs.pH_stromaindex);
+fFo = (y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
+deltaph = y(yidcs.pH_stromaindex) - y(yidcs.pH_lumenindex); %y(yidcs.pH_lumenindex) - y(yidcs.pH_stromaindex);
 pmf = y(yidcs.deltapsiindex) + (2.3*ATPpar.R*ATPpar.T)*(deltaph)/ATPpar.F; 
 x = (1/ATPpar.kF)*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH); 
 D = 1 + x + x^2 + x^3 + x^4; 
@@ -23,6 +25,8 @@ end
 
 %deltaph = -log(y(yidcs.Hs)) + log(y(yidcs.Hl)); 
 % r(268,1) = r(268,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
+r(264,1) = r(264,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
+r(265,1) = r(265,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
 dydt = S*r;
 
@@ -64,6 +68,8 @@ aaat = t;
 dydt(yidcs.Hl) = aa-aaa; 
 
 % dydt(yidcs.Hl) = dydt(yidcs.Hl)/ATPpar.Vstroma - vFDPFT/ATPpar.Vstroma * HPR/3/ATPpar.Vstroma; 
+dydt(yidcs.Hs) = dydt(yidcs.Hs) + (-(HPR * vFDPFT) / ATPpar.Vstroma + ((2.0 + 2.0 * phi) * Vr) / (2 + 1.5 * phi));
+dydt(yidcs.Hl) = dydt(yidcs.Hl) + vFDPFT * HPR / ATPpar.Vlumen; 
 
 % disp(a);
 % dFl = 0;% dLaiskFluorescence(Ynames,knames,k,y);
@@ -74,7 +80,7 @@ kpsi = 10;
 Fi = (deltapsi_ss-y(yidcs.deltapsiindex))*kpsi*ATPpar.Cmem/ATPpar.F;
 VHin = dydt(yidcs.Hl);
 VHout = 0; %dydt(yidcs.Hs); 
-dydt(yidcs.deltapsiindex) = (((VHin-VHout)/ATPpar.Sth + Fi)*ATPpar.F)/ATPpar.Cmem*1e-4;
+dydt(yidcs.deltapsiindex) = (((VHin-VHout)/ATPpar.Sth + Fi)*ATPpar.F)/ATPpar.Cmem; %*1e-4;
 %Ftotal = y(yidcs.FDP) + y(yidcs.FP) + y(yidcs.FDP) + y(yidcs.FT); 
 
 Em_Th = ATPpar.EmATPTh_7-ATPpar.VpH*(y(yidcs.pH_stromaindex)-7);
@@ -83,10 +89,15 @@ KE_ThATPase = exp((2*ATPpar.F*(Em_ATPase-Em_Th))/(ATPpar.R*ATPpar.T));
 VFr = (ATPpar.kFr/ATPpar.Stroma)*(ATPpar.Thr*y(yidcs.ATPaseoindex)-((ATPpar.Tho*y(yidcs.ATPaserindex))/(KE_ThATPase)));
 dydt(yidcs.ATPaserindex) = ATPpar.B_stroma*VFr;
 dydt(yidcs.ATPaseoindex) = -ATPpar.B_stroma*VFr;
+dydt(yidcs.pH_stromaindex) = -(ATPpar.B_stroma/ATPpar.Vstroma)*dydt(yidcs.Hs);
+dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen/ATPpar.Vlumen)*dydt(yidcs.Hl); 
+dydt(yidcs.FDP) = dydt(yidcs.FDP) - (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 dydt(yidcs.pH_stromaindex) = -(ATPpar.B_stroma)*dydt(yidcs.Hs);
 dydt(yidcs.pH_lumenindex) = -(ATPpar.B_lumen)*dydt(yidcs.Hl); 
 dydt(yidcs.FT) = dydt(yidcs.FT);% - (r(kf1indcs)-r(kf2indcs)) + (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 dydt(yidcs.FDP) = dydt(yidcs.FDP);% + (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
+dydt(yidcs.FT) = dydt(yidcs.FT) - (r(kf1indcs)-r(kf2indcs)) + (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
+dydt(yidcs.FDP) = dydt(yidcs.FDP) + (r(kf1indcs)-r(kf2indcs)) - (r(kf1indcs)-r(kf2indcs))*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
 %fFo = y(yidcs.FT)/Ftotal; 
 %fFo initial val = 0 
@@ -95,6 +106,11 @@ if t > 1e-8
 end 
 
 if any(y<-1e-3)
+
+if any (y<-1e-10)
+   foo = 1;
+end
+if any(y<-1e-10)
     foo = 1;
 end
 if any(isnan(dydt))
