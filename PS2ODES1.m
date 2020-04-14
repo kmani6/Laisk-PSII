@@ -26,6 +26,10 @@ end
 
 dydt = S*r;
 
+if t > 1e-8
+   foo = 1;  
+end 
+
 
 HPR = 4.67; 
 phi = 1; 
