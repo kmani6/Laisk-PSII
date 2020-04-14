@@ -3,7 +3,7 @@ function dydt = PS2ODES1(t,y,krxn,k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1
 
 nrxn = length(rate_inds);
 fFr = (y(yidcs.ATPaserindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
-fFo = 1-fFr;%(y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
+fFo = 1-fFr(y(yidcs.ATPaseoindex))/(y(yidcs.ATPaserindex) + y(yidcs.ATPaseoindex));
 deltaph = -y(yidcs.pH_lumenindex) + y(yidcs.pH_stromaindex);
 pmf = y(yidcs.deltapsiindex) + (2.3*ATPpar.R*ATPpar.T)*(deltaph)/ATPpar.F; 
 x = (1/ATPpar.kF)*(fFr*10^pmf/ATPpar.VpH + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH); 
@@ -25,6 +25,10 @@ end
 % r(268,1) = r(268,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
 dydt = S*r;
+
+if t > 1e-8
+   foo = 1;  
+end 
 
 
 HPR = 4.67; 
