@@ -1,6 +1,6 @@
 function [kconst] = LaiskKconstantsReadTable1(analysis_name)
 
-file1 = [analysis_name,'/LaiskConstants1.xls'];
+file1 = [analysis_name,'/LaiskConstants.xls'];
 tablek = readtable(file1);
 knames = tablek.name;
 
