@@ -73,11 +73,14 @@ species{end+1} = 'pHLumen';
 species{end+1} = 'pHStroma';
 species{end+1} = 'fr';
 
-Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
-ts{end+1} = -dark_adaptation_time+Sol.x;
-ys{end+1} = Sol.y;
+% Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
+% ts{end+1} = -dark_adaptation_time+Sol.x;
+% ys{end+1} = Sol.y;
+% Fs{end+1} = [];
+ts{end+1} = 0;%-dark_adaptation_time+Sol.x;
+ys{end+1} = 0;%Sol.y;
 Fs{end+1} = [];
-yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
+% yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
 counter = 1;
 for train = 1:n_trains
     fprintf('train %i \n', train)
@@ -89,7 +92,7 @@ for train = 1:n_trains
         k(mult1) = mult1Val;
         k(mult2) = mult2Val;    
         k(n1idx) = n1;
-        nTimepoints = flash_duration*1e8;
+        nTimepoints = flash_duration*1e6;
         t = [0, flash_duration];
         Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
         while any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
@@ -99,19 +102,32 @@ for train = 1:n_trains
             
         end
         ts{end+1} = ts{end}(end) + Sol.x;
-%         ts{end+1} = (train-1)*(train_interval + n_flashes*(flash_duration+flash_interval)) + n_flashes*(flash_duration+flash_interval)+t;
+
         ys{end+1} = Sol.y;
+
+% 
+%         t = linspace(0, flash_duration, nTimepoints);
+%         Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
+%         ts{end+1} = ts{end}(end) + t;
+% 
+%         Sol = Sol';
+%         ys{end+1} = Sol';
 
         if length(ts{end}) ~= size(ys{end},2)
             foo = 1;
         end
         F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol.y) ;
+%         F = LaiskFluorescence(Fluorescence_y_inds, Fluorescence_k_idcs, k, Sol) ;
         F1 = F;
         t1 = Sol.x;
+%         t1 = t;
         FvFm(counter) = (max(F) - F(1))/max(F);
         flash_O2 = Sol.y(O2ind,:) -Sol.y(O2ind,1) ;
+%         flash_O2 = Sol(O2ind,:) -Sol(O2ind,1) ;
         O2(counter) = trapz(Sol.x, flash_O2);
+%         O2(counter) = trapz(t, flash_O2);
         O2_light(counter) = trapz(Sol.x, flash_O2);
+%         O2_light(counter) = trapz(t, flash_O2);
         yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
         Fs{end+1} = F;
         if any(isnan(yinitial))
@@ -126,7 +142,6 @@ for train = 1:n_trains
         t_lims = [0,flash_interval];
         Sol = ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
 %         yinitial = Sol.y(:,end); %initialize the y vector for the next iteration 
-
         if any(any(Sol.y<-1e-5)) || any(any(isnan(Sol.y)))
             nTimepoints = flash_interval*1e3;
             t = linspace(0, flash_interval, nTimepoints); 
@@ -149,9 +164,24 @@ for train = 1:n_trains
             Fs{end+1} = [];
             yinitial = Sol.y(:,end);
         end
-        O2_dark_prod = Sol.y(O2ind,:) - Sol.y(O2ind,1);
-        O2_dark(counter) = trapz(Sol.x, O2_dark_prod);
-        O2(counter) = O2(counter)+O2_dark(counter);
+
+
+
+%         nTimepoints = flash_interval*1e5;
+%         t = linspace(0, flash_interval, nTimepoints); 
+%         Sol = ode2(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t,yinitial);
+%         ts{end+1} = ts{end}(end) + t;
+%         Fs{end+1} = [];
+%         Sol = Sol';
+%         yinitial = Sol(:,end);
+%         O2_dark_prod = Sol(O2ind,:) - Sol(O2ind,1);
+%         O2_dark(counter) = trapz(t, O2_dark_prod);
+%         O2(counter) = O2(counter)+O2_dark(counter);
+        
+%         
+%         O2_dark_prod = Sol.y(O2ind,:) - Sol.y(O2ind,1);
+%         O2_dark(counter) = trapz(Sol.x, O2_dark_prod);
+%         O2(counter) = O2(counter)+O2_dark(counter);
         counter = counter+1;
         if length(ts{end}) ~= size(ys{end},2)
             foo = 1;
