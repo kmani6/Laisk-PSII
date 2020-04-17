@@ -47,7 +47,7 @@ yinitial(deltapsiindex) = 0;
 ATPaseoindex = nspecies + 2; 
 yidcs.ATPaseoindex = ATPaseoindex;
 yinitial(ATPaseoindex) = .63;
-ATPaserindex = nspecies + 3; 
+ATPaserindex = nspecies + 3;    
 yidcs.ATPaserindex = ATPaserindex;
 yinitial(ATPaserindex) = 0; 
 pH_lumenindex = nspecies + 4;
@@ -88,7 +88,7 @@ lb = [reshape(lby,[],1); reshape(lbk,[],1)];
 ub = [reshape(uby,[],1); reshape(ubk,[],1)];
 
 Ynames = tabley.name;
-file3 = [analysis_name,'/LaiskReactions.xlsx'];
+file3 = [analysis_name,'/LaiskReactions1.xlsx'];
 [~,Rknames] = xlsread(file3);
 
 PFD = find(strcmp(knames, 'PFD')); 
@@ -217,8 +217,9 @@ ATPpar.EmATPase_7 = -.27;
 ATPpar.EmATPTh_7 = -.27;
 ATPpar.kFr = 10e2;
 ATPpar.B_stroma = 3.33e-2; 
-ATPpar.Vlumen = 8.09e-7;
-ATPpar.Vstroma = 6.48e-6; 
+ATPpar.Vlumen = 1.3;%8.09e-7;
+ATPpar.Vstroma = 10.44;%6.48e-6; 
+ATPpar.thylac = 251;
 ATPpar.B_lumen = 3.33e-2;
 ATPpar.pmfd = 6e-2; 
 ATPpar.kF20 = 2.16e3; 
@@ -236,7 +237,7 @@ ATPpar.apmf = apmf;
 ATPpar.bpmf = bpmf;
 
 [species,S,rate_inds] = Laisk_read_excel_model1(analysis_name);
-
+P = find(strcmp(species,'SynP'));
 FDP = find(strcmp(species,'SynFDP'));
 FP = find(strcmp(species,'SynFP'));
 FD = find(strcmp(species,'SynFD'));
@@ -248,14 +249,12 @@ NADPH = find(strcmp(species,'NADPH'));
 NADP = find(strcmp(species,'NADP'));
 ADP = find(strcmp(species,'SynADP'));
 ATP = find(strcmp(species,'SynATP'));
-<<<<<<< HEAD
 % Hs -> Hl 	kHleak
 % ATP -> ADP 	kcbb_ATP
 % NADPH -> NADP	kcbb_NADPH
 % 9ATP + 6 NADPH -> 9 ADP + 6 NADP	kcbb
-=======
->>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
 
+yidcs.P = P;
 yidcs.FDP = FDP;
 yidcs.FT = FT;
 yidcs.FD = FD;

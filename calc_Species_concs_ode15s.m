@@ -74,6 +74,7 @@ for train = 1:n_trains
         foo = 1;
     end
     for flash = 1:n_flashes
+        fprintf('flash %i \n', flash)
         k(mult1) = mult1Val;
         k(mult2) = mult2Val;    
         k(n1idx) = n1;
@@ -253,9 +254,9 @@ plot_H_species(species, ys, ts);
 titles{end+1} = 'H_species';
 plot_NAD_redox_state(species, ys, ts);
 titles{end+1} = 'NADP';
-plot_atp_species(species, ys, ts);
-titles{end+1} = 'ADP_phospho';
-titles{end+1} = 'ADP_ATP';
+% plot_atp_species(species, ys, ts);
+% titles{end+1} = 'ADP_phospho';
+% titles{end+1} = 'ADP_ATP';
 plot_H_species_ATPSYN(species, ys, ts);
 titles{end+1} = 'H_species_ATP_SYN';
 plot_H2O_species(species, ys, ts)

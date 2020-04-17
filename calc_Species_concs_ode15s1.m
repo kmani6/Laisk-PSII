@@ -18,9 +18,19 @@ kr = x0(length(indepy)+1:end);
 k = tablek.base_val;
 k(indepk) = kr;
 
+plus2Hs = find(strcmp(Rknames(:,2), 'rqr'));
+minus2Hs = find(strcmp(Rknames(:,2), 'rqd'));
+
+
+S(yidcs.Hs, plus2Hs) = 2;
+S(yidcs.Hs, minus2Hs) = -2;
+
+
+
 
 % k(kidcs.PFD) = .015;
 k(kidcs.kf) = 1;
+global PS2T PS1T
 PS1T = (1-k(kidcs.a2))*k(kidcs.Chl)/k(kidcs.PSU1); 
 PS2T = k(kidcs.a2)*(k(kidcs.Chl)/k(kidcs.PSU2));
 n1 = k(kidcs.PFD)*k(kidcs.Labs)*(1-k(kidcs.a2))/PS1T;
@@ -72,7 +82,21 @@ species{end+1} = 'ATPaseR';
 species{end+1} = 'pHLumen';
 species{end+1} = 'pHStroma';
 species{end+1} = 'fr';
+species{end+1} = 'PGA';
+yinitial(end+1) = 19;
+yidcs.PGA = length(yinitial);
+species{end+1} = 'RuBP';
+yinitial(end+1) = 1;
+yidcs.RuBP = length(yinitial);
 
+
+
+
+
+
+
+% yinitial(yidcs.Hl) = 10^(-yinitial(yidcs.pH_lumenindex));
+% yinitial(yidcs.Hs) = 10^(-yinitial(yidcs.pH_stromaindex));
 % Sol =  ode15s(@(t,y) PS2ODES1(t,y,k(kconst),k,rate_inds,S,Rknames,species,yidcs,ATPpar,kf1indcs, kf2indcs,kidcs),t_lims,yinitial);
 % ts{end+1} = -dark_adaptation_time+Sol.x;
 % ys{end+1} = Sol.y;
@@ -241,109 +265,96 @@ disp('Computations Complete. Plotting ...')
 % title('Combined O_2 and FvFm oscillations')
 % 
 
-Ty = removevars(tabley, {'lb', 'ub', 'independent'});
-Tk = removevars(tablek, {'lb', 'ub', 'independent'});
-titles = {};
-
-figure;
-semilogx(t1,F1)
-ylabel('Fluorescence')
-xlabel('time')
-titles{end+1} = 'Fluorescence';
-savefig('Fluorescence.fig')
-
-figure;
-plot(1:length(FvFm), FvFm, '.-')
-ylabel('Flash FqFm')
-xlabel('STF #')
-title('FvFm oscillations')
-titles{end+1} = 'FvFm_oscillations';
-savefig('FvFm_oscillations.fig')
-
-figure;
-plot(1:length(O2), O2, '.-')
-ylabel('Flash O_2 yield')
-xlabel('STF #')
-title('O_2 oscillations')
-titles{end+1} = 'O2_oscillations';
-savefig('O2_oscillations.fig')
-
-figure;
-plot(1:length(FvFm), FvFm, '.-')
-ylabel('Flash FqFm')
-yyaxis right
-plot(1:length(O2), O2, '.-')
-ylabel('Flash O_2 yield')
-xlabel('STF #')
-title('Combined FvFm and O2 oscillations')
-titles{end+1} = 'FvFm_O2_oscillations';
-savefig('Combined FvFm_O2_oscillations.fig')
-
-plot_S_states(species, ys, ts);
-titles{end+1} = 'S_states';
-plot_pq_redox_state(species, ys, ts);
-titles{end+1} = 'PQ';
-plot_cyt_redox_state(species, ys, ts);
-titles{end+1} = 'Cyt';
-plot_pc_redox_state(species, ys, ts);
-titles{end+1} = 'PC';
-plot_P700_redox_state(species, ys, ts);
-titles{end+1} = 'P700';
-plot_fd_redox_state(species, ys, ts);
-titles{end+1} = 'Fd';
+% Ty = removevars(tabley, {'lb', 'ub', 'independent'});
+% Tk = removevars(tablek, {'lb', 'ub', 'independent'});
+% titles = {};
+% 
+% 
+% 
+% figure;
+% plot(1:length(FvFm), FvFm, '.-')
+% ylabel('Flash FqFm')
+% xlabel('STF #')
+% title('FvFm oscillations')
+% titles{end+1} = 'FvFm_oscillations';
+% % savefig('FvFm_oscillations.fig')
+% 
+% figure;
+% plot(1:length(O2), O2, '.-')
+% ylabel('Flash O_2 yield')
+% xlabel('STF #')
+% title('O_2 oscillations')
+% titles{end+1} = 'O2_oscillations';
+% % savefig('O2_oscillations.fig')
+% 
+% figure;
+% plot(1:length(FvFm), FvFm, '.-')
+% ylabel('Flash FqFm')
+% yyaxis right
+% plot(1:length(O2), O2, '.-')
+% ylabel('Flash O_2 yield')
+% xlabel('STF #')
+% title('Combined FvFm and O2 oscillations')
+% titles{end+1} = 'FvFm_O2_oscillations';
+% % savefig('Combined FvFm_O2_oscillations.fig')
+% 
+% plot_S_states(species, ys, ts);
+% titles{end+1} = 'S_states';
+% plot_pq_redox_state(species, ys, ts);
+% titles{end+1} = 'PQ';
+% plot_cyt_redox_state(species, ys, ts);
+% titles{end+1} = 'Cyt';
+% plot_pc_redox_state(species, ys, ts);
+% titles{end+1} = 'PC';
+% plot_P700_redox_state(species, ys, ts);
+% titles{end+1} = 'P700';
+% plot_fd_redox_state(species, ys, ts);
+% titles{end+1} = 'Fd';
 plot_H_species(species, ys, ts);
-titles{end+1} = 'H_species';
-plot_NAD_redox_state(species, ys, ts);
-titles{end+1} = 'NADP';
+% titles{end+1} = 'H_species';
+% plot_NAD_redox_state(species, ys, ts);
+% titles{end+1} = 'NADP';
 plot_atp_species(species, ys, ts);
-titles{end+1} = 'ADP_phospho';
-titles{end+1} = 'ADP_ATP';
-plot_H_species_ATPSYN(species, ys, ts);
-titles{end+1} = 'H_species_ATP_SYN';
-plot_H2O_species(species, ys, ts)
-titles{end+1} = 'water_species';
-plot_buffer_species(species, ys, ts)
-titles{end+1} = 'buffer_species';
-plot_OH_species(species, ys, ts)
-titles{end+1} = 'OH_species';
-plot_Fl(Fs, ts);
-fm = reshape(FvFm,n_flashes,[]);
-a = mean(fm,1);
-figure; plot(1:length(a), a,'.-')
-ylabel('Average Fq/Fm per train')
-xlabel('train number')
-titles{end+1} = 'Avg_FvFm';
-titles{end+1} = 'dsadas';
-
-
-figure;
-plot(t1,F1);
-ylabel('Fluorescence')
-xlabel('time')
-titles{end+1} = 'First_Flash_Fluorescence';
-
-
-h = get(0,'children');
-timestamp = datestr(now,30);
-
-if ~exist('results', 'dir')
-    mkdir('results')
-end
-if ~exist(['results/' analysis_name], 'dir')
-    mkdir('results/', analysis_name);
-end
-
-mkdir(['results/', analysis_name, '/', timestamp]);
-dirname = ['results/', analysis_name, '/', timestamp];
-
-for i=1:length(h)
-    saveas(h(i), [dirname, '/', titles{i}], 'png');
-%     saveas(h(i), [dirname, '/', titles{i}], 'fig');
-end
-
-writetable(Ty, [dirname, '/ys.csv'])
-writetable(Tk, [dirname, '/ks.csv'])
-
+% titles{end+1} = 'ADP_phospho';
+% titles{end+1} = 'ADP_ATP';
+% plot_Fl(Fs, ts);
+% fm = reshape(FvFm,n_flashes,[]);
+% a = mean(fm,1);
+% figure; plot(1:length(a), a,'.-')
+% ylabel('Average Fq/Fm per train')
+% xlabel('train number')
+% titles{end+1} = 'Avg_FvFm';
+% titles{end+1} = 'dsadas';
+% 
+% 
+% figure;
+% plot(t1,F1);
+% ylabel('Fluorescence')
+% xlabel('time')
+% titles{end+1} = 'First_Flash_Fluorescence';
+% 
+% 
+% h = get(0,'children');
+% timestamp = datestr(now,30);
+% 
+% if ~exist('results', 'dir')
+%     mkdir('results')
+% end
+% if ~exist(['results/' analysis_name], 'dir')
+%     mkdir('results/', analysis_name);
+% end
+% 
+% mkdir(['results/', analysis_name, '/', timestamp]);
+% dirname = ['results/', analysis_name, '/', timestamp];
+% 
+% for i=1:length(h)
+%     saveas(h(i), [dirname, '/', titles{i}], 'png');
+% %     saveas(h(i), [dirname, '/', titles{i}], 'fig');
+% end
+% 
+% writetable(Ty, [dirname, '/ys.csv'])
+% writetable(Tk, [dirname, '/ks.csv'])
+% 
 
 end
 

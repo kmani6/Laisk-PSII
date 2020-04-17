@@ -4,7 +4,7 @@ file1 = [analysis_name,'/LaiskConstants.xls'];
 tablek = readtable(file1);
 knames = tablek.name;
 
-file3 = [analysis_name,'/LaiskReactions1.xlsx'];
+file3 = [analysis_name,'/LaiskReactions.xlsx'];
 [~,Rknames] = xlsread(file3);
 
 kconst = zeros(size(Rknames,1),1);
