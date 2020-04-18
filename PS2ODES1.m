@@ -104,7 +104,7 @@ vFDPFT = y(yidcs.FDP) * kF1 - y(yidcs.FT) * kFT2;
 r(265) = y(yidcs.FDP) * kF1;
 r(266) = y(yidcs.FT) * kFT2;
 
-%deltaph = -log(y(yidcs.Hs)) + log(y(yidcs.Hl)); 
+deltaph = -log(y(yidcs.Hs)) + log(y(yidcs.Hl)); 
 % r(264,1) = r(264,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 % r(265,1) = r(265,1)*(fFr*10^(pmf/ATPpar.VpH) + fFo*10^(pmf-ATPpar.pmfd)/ATPpar.VpH);
 
@@ -300,19 +300,6 @@ if any(y>1e3)
    y(badies)
    species(badies)
    foo = 1; 
-% <<<<<<< HEAD
-if any (y<-1e-10)
-   foo = 1;
-% =======
-if any(y<-1e-10)
-    foo = 1;
-% >>>>>>> dfd6a071ed8da6ea4a02edd291f6cd46525d60c1
-end
-if isnan(dydt)
-   foo = 1;
-end
-if isnan(y)
-   foo = 1;
 end
 
 
