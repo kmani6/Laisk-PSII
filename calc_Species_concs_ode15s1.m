@@ -33,9 +33,9 @@ k(kidcs.kf) = 1;
 global PS2T PS1T
 PS1T = (1-k(kidcs.a2))*k(kidcs.Chl)/k(kidcs.PSU1); 
 PS2T = k(kidcs.a2)*(k(kidcs.Chl)/k(kidcs.PSU2));
-n1 = k(kidcs.PFD)*k(kidcs.Labs)*(1-k(kidcs.a2))/PS1T;
-n2 = k(kidcs.PFD)*k(kidcs.Labs)*k(kidcs.a2)/PS2T;                 
-yinitial(PSIidcs) = PS1T/PS2T;
+n1 = k(kidcs.PFD)*k(kidcs.Labs)*(1-k(kidcs.a2));  %k(kidcs.PFD)*k(kidcs.Labs)*(1-k(kidcs.a2))/PS1T;
+n2 = k(kidcs.PFD)*k(kidcs.Labs)*k(kidcs.a2); %k(kidcs.PFD)*k(kidcs.Labs)*k(kidcs.a2)/PS2T;                  
+yinitial(PSIidcs) = PS1T; %PS1T/PS2T;
      
 mult1Val = n2*k(kidcs.kp)/(1+k(kidcs.kp)+k(kidcs.kn)+k(kidcs.kr));
 mult2Val = n2*k(kidcs.kp)/(1+k(kidcs.kp)+k(kidcs.kn));
