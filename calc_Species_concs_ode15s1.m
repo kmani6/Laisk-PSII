@@ -17,13 +17,13 @@ indepk = find(tablek.independent);
 kr = x0(length(indepy)+1:end);
 k = tablek.base_val;
 k(indepk) = kr;
+% 
+% plus2Hs = find(strcmp(Rknames(:,2), 'rqr'));
+% minus2Hs = find(strcmp(Rknames(:,2), 'rqd'));
 
-plus2Hs = find(strcmp(Rknames(:,2), 'rqr'));
-minus2Hs = find(strcmp(Rknames(:,2), 'rqd'));
-
-
-S(yidcs.Hs, plus2Hs) = 2;
-S(yidcs.Hs, minus2Hs) = -2;
+% 
+% S(yidcs.Hs, plus2Hs) = 2;
+% S(yidcs.Hs, minus2Hs) = -2;
 
 
 
@@ -70,11 +70,15 @@ k(mult2) = 0;
 k(n1idx) = 0;
 dark_adaptation_time = 1; %3-5 minutes typically
 t_lims = [0,dark_adaptation_time];
+
 yinitial(yidcs.deltapsiindex) = 0;
 yinitial(yidcs.ATPaseoindex) = .63;
 yinitial(yidcs.ATPaserindex) = 0; 
 yinitial(yidcs.pH_lumenindex) = 7.8;
 yinitial(yidcs.pH_stromaindex) = 7.8;
+one_molar = 1000;
+yinitial(yidcs.Hs) = (10^-yinitial(yidcs.pH_stromaindex)) * one_molar;
+yinitial(yidcs.Hl) = (10^-yinitial(yidcs.pH_lumenindex)) * one_molar;
 yinitial(yidcs.fRindex) = 0;
 species{end+1} = 'deltapsi';
 species{end+1} = 'ATPaseO';
@@ -83,10 +87,10 @@ species{end+1} = 'pHLumen';
 species{end+1} = 'pHStroma';
 species{end+1} = 'fr';
 species{end+1} = 'PGA';
-yinitial(end+1) = 19;
+yinitial(end+1) = .019;
 yidcs.PGA = length(yinitial);
 species{end+1} = 'RuBP';
-yinitial(end+1) = 1;
+yinitial(end+1) = .001;
 yidcs.RuBP = length(yinitial);
 
 
