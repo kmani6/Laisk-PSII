@@ -286,11 +286,11 @@ end
 
 
 a = dydt(yidcs.F) + dydt(yidcs.FD) +dydt(yidcs.FP) +dydt(yidcs.FDP) + dydt(yidcs.FT);
-if a>1e-20
-    foo = 1;
-    fprintf("\n \n F: %d \n FD: %d \n FP: %d \n FDP: %d \n FT: %d", ...
-        dydt(yidcs.F), dydt(yidcs.FD), dydt(yidcs.FP), dydt(yidcs.FDP), dydt(yidcs.FT))
-end
+% if a>1e-20
+%     foo = 1;
+%     fprintf("\n \n F: %d \n FD: %d \n FP: %d \n FDP: %d \n FT: %d", ...
+%         dydt(yidcs.F), dydt(yidcs.FD), dydt(yidcs.FP), dydt(yidcs.FDP), dydt(yidcs.FT))
+% end
 
 if any(y<-1e-9)
    badies = find(y<-1e-10);

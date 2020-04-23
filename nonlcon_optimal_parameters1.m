@@ -86,7 +86,7 @@ lb = [reshape(lby,[],1); reshape(lbk,[],1)];
 ub = [reshape(uby,[],1); reshape(ubk,[],1)];
 
 Ynames = tabley.name;
-file3 = [analysis_name,'/LaiskReactions.xlsx'];
+file3 = [analysis_name,'/LaiskReactions.xls'];
 [~,Rknames] = xlsread(file3);
 
 PFD = find(strcmp(knames, 'PFD')); 

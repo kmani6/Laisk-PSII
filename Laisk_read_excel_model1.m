@@ -2,7 +2,7 @@ function [species,S,rate_inds] = Laisk_read_excel_model1(analysis_name)
 
 species = {};
 
-file = [analysis_name,'/LaiskReactions1.xlsx']; 
+file = [analysis_name,'/LaiskReactions.xls']; 
 [~,reactions,~] = xlsread(file);
 
 nrxn = length(reactions); 
